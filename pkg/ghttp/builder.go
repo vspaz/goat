@@ -83,7 +83,7 @@ func (b *clientBuilder) Logger(logger *log.Logger) ClientBuilder {
 }
 
 func (b *clientBuilder) Build() Client {
-	client := &HttpClient{
+	return &HttpClient{
 		builder: b,
 		client: &http.Client{
 			Timeout: b.connTimeout,
@@ -101,7 +101,6 @@ func (b *clientBuilder) Build() Client {
 			},
 		},
 	}
-	return &client
 }
 
 func NewClientBuilder() ClientBuilder {
