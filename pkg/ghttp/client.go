@@ -8,7 +8,7 @@ import (
 )
 
 type Client interface {
-	Get(url string, headers map[string]string) (*Response, error)
+	Get(path string, headers map[string]string) (*Response, error)
 }
 
 type HttpClient struct {
@@ -17,7 +17,7 @@ type HttpClient struct {
 }
 
 func (c *HttpClient) doRequest(method string, path string, headers map[string]string, body *bytes.Buffer) (*Response, error) {
-	req, err := http.NewRequest(method, path, body)
+	req, err := http.NewRequest(method, c.builder.host+path, body)
 	if err != nil {
 		c.builder.logger.Fatal(err)
 	}
@@ -56,6 +56,10 @@ func (c *HttpClient) DoRequest(method string, path string, headers map[string]st
 	return nil, err
 }
 
-func (c *HttpClient) Get(url string, headers map[string]string) (*Response, error) {
-	panic("implement me")
+func (c *HttpClient) Get(path string, headers map[string]string) (*Response, error) {
+	resp, err := c.DoRequest(http.MethodGet, path, headers, nil)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
