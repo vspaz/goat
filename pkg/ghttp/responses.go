@@ -1,5 +1,10 @@
 package ghttp
 
-type Response struct {
+import "net/http"
 
+type Response struct {
+	Status     string
+	StatusCode int
+	Headers    http.Header
+	Body       []byte
 }
