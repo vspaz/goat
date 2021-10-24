@@ -1,6 +1,9 @@
 package ghttp
 
-import "time"
+import (
+	"log"
+	"time"
+)
 
 type ClientBuilder interface {
 	Host(host string) ClientBuilder
@@ -11,6 +14,7 @@ type ClientBuilder interface {
 	Delay(num float64) ClientBuilder
 	ConnTimeout(timeout time.Duration) ClientBuilder
 	ReadTimeout(timeout time.Duration) ClientBuilder
+	Logger(logger log.Logger) ClientBuilder
 }
 
 type clientBuilder struct {
@@ -30,4 +34,6 @@ type clientBuilder struct {
 
 	connTimeout time.Duration
 	readTimeout time.Duration
+
+	logger log.Logger
 }
