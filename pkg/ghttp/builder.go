@@ -18,22 +18,16 @@ type ClientBuilder interface {
 }
 
 type clientBuilder struct {
-	host string
-
+	host              string
 	basicAuthUser     string
 	basicAuthPassword string
-
-	tlsCertFilePath string
-	tlsKeyFilePath  string
-	tlsCaFilePath   string
-
-	userAgent string
-
-	retryCount int
-	delay      float64
-
-	connTimeout time.Duration
-	readTimeout time.Duration
-
-	logger log.Logger
+	tlsCertFilePath   string
+	tlsKeyFilePath    string
+	tlsCaFilePath     string
+	userAgent         string
+	retryCount        int
+	delay             float64
+	connTimeout       time.Duration
+	readTimeout       time.Duration
+	logger            log.Logger
 }
