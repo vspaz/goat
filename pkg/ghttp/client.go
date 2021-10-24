@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 type Client interface {
@@ -40,8 +41,19 @@ func (c *HttpClient) doRequest(method string, path string, headers map[string]st
 func (c *HttpClient) DoRequest(method string, path string, headers map[string]string, body interface{}) (*Response, error) {
 	delay := c.builder.delay
 	if headers == nil {
-
+		headers = map[string]string{}
 	}
+	var err error
+	for attempt := 0; attempt <= c.builder.retryCount; attempt++ {
+		resp, err := c.doRequest(method, path, headers, toByteBuffer(headers, body))
+		if err == nil {
+			return resp, nil
+		}
+		delay *= 2
+		time.Sleep(time.Second * time.Duration(delay))
+		c.builder.logger.Printf("attempt: '%d'", attempt)
+	}
+	return nil, err
 }
 
 func (c *HttpClient) Get(url string, headers map[string]string) (*Response, error) {
