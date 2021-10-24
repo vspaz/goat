@@ -17,5 +17,5 @@ func main() {
 		ReadTimeout(10).
 		Logger(log.Default()).
 		Build()
-	client.Get("fobar", nil)
+	client.DoGet("fobar", nil)
 }

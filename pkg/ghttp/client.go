@@ -8,7 +8,7 @@ import (
 )
 
 type Client interface {
-	Get(path string, headers map[string]string) (*Response, error)
+	DoGet(path string, headers map[string]string) (*Response, error)
 }
 
 type HttpClient struct {
@@ -56,7 +56,7 @@ func (c *HttpClient) DoRequest(method string, path string, headers map[string]st
 	return nil, err
 }
 
-func (c *HttpClient) Get(path string, headers map[string]string) (*Response, error) {
+func (c *HttpClient) DoGet(path string, headers map[string]string) (*Response, error) {
 	resp, err := c.DoRequest(http.MethodGet, path, headers, nil)
 	if err != nil {
 		return nil, err
