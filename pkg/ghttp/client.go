@@ -38,7 +38,10 @@ func (c *HttpClient) doRequest(method string, path string, headers map[string]st
 }
 
 func (c *HttpClient) DoRequest(method string, path string, headers map[string]string, body interface{}) (*Response, error) {
+	delay := c.builder.delay
+	if headers == nil {
 
+	}
 }
 
 func (c *HttpClient) Get(url string, headers map[string]string) (*Response, error) {
