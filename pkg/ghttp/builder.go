@@ -53,7 +53,7 @@ func (b *clientBuilder) Tls(certFilePath, keyFilePath, CaFilePath string) Client
 }
 
 func (b *clientBuilder) UserAgent(userAgent string) ClientBuilder {
-	b.userAgent = ua
+	b.userAgent = userAgent
 	return b
 }
 
@@ -89,7 +89,13 @@ func (b *clientBuilder) Build() Client {
 			Timeout: b.connTimeout,
 			Transport: &Auth{
 				&http.Transport{
-					ResponseHeaderTimeout: b.readTimeout},
+					ResponseHeaderTimeout: b.readTimeout,
+					TLSClientConfig: createTlsConfig(
+						b.tlsCertFilePath,
+						b.tlsKeyFilePath,
+						b.tlsCaFilePath,
+					),
+				},
 				b.basicAuthUser,
 				b.basicAuthPassword,
 			},
