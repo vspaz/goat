@@ -4,6 +4,9 @@
 *.dll
 *.so
 *.dylib
+pkg/linux_amd64/
+src/
+
 
 # Test binary, built with `go test -c`
 *.test

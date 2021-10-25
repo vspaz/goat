@@ -22,7 +22,7 @@ type HttpClient struct {
 }
 
 func (c *HttpClient) doRequest(method string, path string, headers map[string]string, body *bytes.Buffer) (*Response, error) {
-	c.builder.logger.Printf("making request to: '%s'", c.builder.host+"/"+path)
+	c.builder.logger.Printf("making request to: '%s'", c.builder.host+path)
 	req, err := http.NewRequest(method, c.builder.host+path, body)
 	if err != nil {
 		c.builder.logger.Fatal(err)
@@ -31,7 +31,7 @@ func (c *HttpClient) doRequest(method string, path string, headers map[string]st
 	req = setHeaders(req, headers)
 	resp, err := c.client.Do(req)
 	if err != nil {
-		c.builder.logger.Printf("error: %s", err)
+		c.builder.logger.Fatalf("error: %s", err)
 	}
 	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
