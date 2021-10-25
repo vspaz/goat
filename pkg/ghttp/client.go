@@ -68,10 +68,9 @@ func (c *HttpClient) DoRequest(method string, path string, headers map[string]st
 }
 
 func (c *HttpClient) DoGet(path string, headers map[string]string) (*Response, error) {
-	resp, err := c.DoRequest(http.MethodGet, path, headers, nil)
-	if err != nil {
-		c.builder.logger.Print(err)
-		return nil, err
-	}
-	return resp, nil
+	return c.DoRequest(http.MethodGet, path, headers, nil)
+}
+
+func (c *HttpClient) DoDelete(path string, headers map[string]string, body interface{}) (*Response, error) {
+	return c.DoRequest(http.MethodDelete, path, headers, body)
 }
