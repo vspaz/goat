@@ -12,6 +12,7 @@ import (
 )
 
 func TestHttpClient_DoGet(t *testing.T) {
+	t.Parallel()
 	encodedBody, _ := json.Marshal(map[string]string{"foo": "bar"})
 	server := httptest.NewServer(
 		http.HandlerFunc(
