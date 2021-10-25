@@ -74,3 +74,7 @@ func (c *HttpClient) DoGet(path string, headers map[string]string) (*Response, e
 func (c *HttpClient) DoDelete(path string, headers map[string]string, body interface{}) (*Response, error) {
 	return c.DoRequest(http.MethodDelete, path, headers, body)
 }
+
+func (c *HttpClient) DoPatch(path string, headers map[string]string, body interface{}) (*Response, error) {
+	return c.DoRequest(http.MethodPatch, path, headers, body)
+}
