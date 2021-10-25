@@ -78,3 +78,7 @@ func (c *HttpClient) DoDelete(path string, headers map[string]string, body inter
 func (c *HttpClient) DoPatch(path string, headers map[string]string, body interface{}) (*Response, error) {
 	return c.DoRequest(http.MethodPatch, path, headers, body)
 }
+
+func (c *HttpClient) DoPost(path string, headers map[string]string, body interface{}) (*Response, error) {
+	return c.DoPost(path, headers, body)
+}
