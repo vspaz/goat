@@ -3,6 +3,7 @@ package ghttp
 import (
 	"bytes"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 )
@@ -17,7 +18,8 @@ type HttpClient struct {
 }
 
 func (c *HttpClient) doRequest(method string, path string, headers map[string]string, body *bytes.Buffer) (*Response, error) {
-	req, err := http.NewRequest(method, c.builder.host+path, body)
+	c.builder.logger.Printf("making request to: '%s'", c.builder.host+path)
+	req, err := http.NewRequest(method, c.builder.host+"/"+path, body)
 	if err != nil {
 		c.builder.logger.Fatal(err)
 	}
@@ -59,6 +61,7 @@ func (c *HttpClient) DoRequest(method string, path string, headers map[string]st
 func (c *HttpClient) DoGet(path string, headers map[string]string) (*Response, error) {
 	resp, err := c.DoRequest(http.MethodGet, path, headers, nil)
 	if err != nil {
+		log.Print(err)
 		return nil, err
 	}
 	return resp, nil
