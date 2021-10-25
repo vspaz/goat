@@ -8,7 +8,7 @@ import (
 
 func main() {
 	client := ghttp.NewClientBuilder().
-		Host("http://example.com").
+		Host("https://httpbin.org").
 		Auth("user", "user-password").
 		Tls("", "", "").
 		UserAgent("goat").
@@ -18,5 +18,10 @@ func main() {
 		ReadTimeout(10 * time.Second).
 		Logger(log.Default()).
 		Build()
-	client.DoGet("foobar", nil)
+	resp, err := client.DoGet("/get", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(resp.StatusCode)
+	log.Println(string(resp.Body))
 }

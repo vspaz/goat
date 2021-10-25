@@ -14,7 +14,7 @@ clean:
 
 .PHONY: style-fix
 style-fix:
-	fotmt -w .
+	gofmt -w .
 
 .PHONE: lint
 lint:

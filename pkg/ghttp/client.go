@@ -23,7 +23,7 @@ type HttpClient struct {
 
 func (c *HttpClient) doRequest(method string, path string, headers map[string]string, body *bytes.Buffer) (*Response, error) {
 	c.builder.logger.Printf("making request to: '%s'", c.builder.host+"/"+path)
-	req, err := http.NewRequest(method, c.builder.host+"/"+path, body)
+	req, err := http.NewRequest(method, c.builder.host+path, body)
 	if err != nil {
 		c.builder.logger.Fatal(err)
 	}
