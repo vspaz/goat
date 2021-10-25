@@ -18,6 +18,8 @@ func TestHttpClient_DoGet(t *testing.T) {
 		http.HandlerFunc(
 			func(writer http.ResponseWriter, request *http.Request) {
 				assert.Equal(t, request.URL.String(), "/foo")
+				assert.Equal(t, request.Header["User-Agent"][0], "goat")
+				assert.Equal(t, request.Header["Content-Type"][0], "application/json")
 				writer.WriteHeader(http.StatusOK)
 				if _, err := writer.Write(encodedBody); err != nil {
 					t.Fatal(err)
@@ -37,7 +39,7 @@ func TestHttpClient_DoGet(t *testing.T) {
 		ReadTimeout(10 * time.Second).
 		Logger(log.Default()).
 		Build()
-	resp, _ := client.DoGet("/foo", nil)
-	assert.Equal(t,  http.StatusOK, resp.StatusCode)
+	resp, _ := client.DoGet("/foo", map[string]string{"Content-Type": "application/json"})
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	assert.Equal(t, "{\"foo\":\"bar\"}", string(resp.Body))
 }
