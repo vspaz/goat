@@ -4,8 +4,18 @@ all: build
 build:
 	go build -o $(BINARY_NAME) examples/main.go
 
+.PHONY: test
 test:
 	go test -race ./...
 
+.PHONY: clean
 clean:
 	rm -f $(BINARY_NAME)
+
+.PHONY: style-fix
+style-fix:
+	fotmt -w .
+
+.PHONE: lint
+lint:
+	golangci-lint run
