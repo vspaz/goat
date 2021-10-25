@@ -38,5 +38,6 @@ func TestHttpClient_DoGet(t *testing.T) {
 		Logger(log.Default()).
 		Build()
 	resp, _ := client.DoGet("/foo", nil)
-	assert.Equal(t, resp.StatusCode, http.StatusOK)
+	assert.Equal(t,  http.StatusOK, resp.StatusCode)
+	assert.Equal(t, "{\"foo\":\"bar\"}", string(resp.Body))
 }
