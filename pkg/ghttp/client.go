@@ -80,5 +80,9 @@ func (c *HttpClient) DoPatch(path string, headers map[string]string, body interf
 }
 
 func (c *HttpClient) DoPost(path string, headers map[string]string, body interface{}) (*Response, error) {
-	return c.DoPost(path, headers, body)
+	return c.DoRequest(http.MethodPost, path, headers, body)
+}
+
+func (c *HttpClient) DoPut(path string, headers map[string]string, body interface{}) (*Response, error) {
+	return c.DoRequest(http.MethodPut, path, headers, body)
 }
