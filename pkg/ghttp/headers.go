@@ -14,7 +14,7 @@ func isJson(headers map[string]string) bool {
 	return contentType == "application/json"
 }
 
-func isPlainTest(headers map[string]string) bool{
+func isPlainTest(headers map[string]string) bool {
 	contentType, _ := headers["Content-Type"]
 	return contentType == "text/plain" || contentType == "text/html"
 }
