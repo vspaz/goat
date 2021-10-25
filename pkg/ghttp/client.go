@@ -3,13 +3,17 @@ package ghttp
 import (
 	"bytes"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 )
 
 type Client interface {
+	DoRequest(method string, path string, headers map[string]string, body interface{}) (*Response, error)
 	DoGet(path string, headers map[string]string) (*Response, error)
+	DoDelete(path string, headers map[string]string, body interface{}) (*Response, error)
+	DoPatch(path string, headers map[string]string, body interface{}) (*Response, error)
+	DoPost(path string, headers map[string]string, body interface{}) (*Response, error)
+	DoPut(path string, headers map[string]string, body interface{}) (*Response, error)
 }
 
 type HttpClient struct {
@@ -66,7 +70,7 @@ func (c *HttpClient) DoRequest(method string, path string, headers map[string]st
 func (c *HttpClient) DoGet(path string, headers map[string]string) (*Response, error) {
 	resp, err := c.DoRequest(http.MethodGet, path, headers, nil)
 	if err != nil {
-		log.Print(err)
+		c.builder.logger.Print(err)
 		return nil, err
 	}
 	return resp, nil
