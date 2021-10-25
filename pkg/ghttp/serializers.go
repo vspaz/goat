@@ -10,5 +10,6 @@ func toByteBuffer(headers map[string]string, body interface{}) *bytes.Buffer {
 		encodedPayload, _ := json.Marshal(body)
 		return bytes.NewBuffer(encodedPayload)
 	}
+
 	return bytes.NewBuffer([]byte{})
 }

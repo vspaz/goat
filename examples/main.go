@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/vspaz/goat/pkg/ghttp"
 	"log"
+	"time"
 )
 
 func main() {
@@ -13,9 +14,9 @@ func main() {
 		UserAgent("goat").
 		RetryCount(3).
 		Delay(0.5).
-		ConnTimeout(5).
-		ReadTimeout(10).
+		ConnTimeout(5 * time.Second).
+		ReadTimeout(10 * time.Second).
 		Logger(log.Default()).
 		Build()
-	client.DoGet("fobar", nil)
+	client.DoGet("foobar", nil)
 }
