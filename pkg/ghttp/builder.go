@@ -69,8 +69,8 @@ func (b *clientBuilder) Logger(logger *log.Logger) *clientBuilder {
 	return b
 }
 
-func (b *clientBuilder) Build() Client {
-	return &HttpClient{
+func (b *clientBuilder) Build() *GoatClient {
+	return &GoatClient{
 		builder: b,
 		client: &http.Client{
 			Timeout: b.connTimeout,
