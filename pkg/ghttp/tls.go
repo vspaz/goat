@@ -19,7 +19,7 @@ func loadKeyPair(certFilePath string, keyFilePath string) tls.Certificate {
 
 func loadCa(caFilePath string) *x509.CertPool {
 	if caFilePath == "" {
-		return &x509.CertPool{}
+		return nil
 	}
 	ca, err := ioutil.ReadFile(caFilePath)
 	if err != nil {

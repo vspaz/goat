@@ -10,7 +10,7 @@ func main() {
 	client := ghttp.NewClientBuilder().
 		Host("https://httpbin.org").
 		Auth("user", "user-password").
-		Tls("", "", "").
+		Tls("", "", "").  // e.g. cert.pem, key.pem, ca.crt
 		UserAgent("goat").
 		RetryCount(3).
 		Delay(0.5).

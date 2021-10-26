@@ -103,6 +103,6 @@ func (b *clientBuilder) Build() Client {
 	}
 }
 
-func NewClientBuilder() ClientBuilder {
+func NewClientBuilder() *clientBuilder {
 	return &clientBuilder{}
 }

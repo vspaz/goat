@@ -1,10 +1,9 @@
 # Binaries for programs and plugins
-*.exe
-*.exe~
 *.dll
 *.so
 *.dylib
 pkg/linux_amd64/
+goat
 src/
 
 
@@ -17,4 +16,5 @@ src/
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
+# IDE's
 .idea/
