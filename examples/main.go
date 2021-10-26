@@ -1,9 +1,24 @@
 package main
 
 import (
+	"fmt"
 	"github.com/vspaz/goat/pkg/ghttp"
 	"log"
 )
+
+type HttpBinGetResponse struct {
+	Args struct {
+	} `json:"args"`
+	Headers struct {
+		AcceptEncoding string `json:"Accept-Encoding"`
+		Authorization  string `json:"Authorization"`
+		Host           string `json:"Host"`
+		UserAgent      string `json:"User-Agent"`
+		XAmznTraceId   string `json:"X-Amzn-Trace-Id"`
+	} `json:"headers"`
+	Origin string `json:"origin"`
+	Url    string `json:"url"`
+}
 
 func main() {
 	client := ghttp.NewClientBuilder().
@@ -22,5 +37,9 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println(resp.StatusCode)
-	log.Println(string(resp.Body))
+	log.Println(resp.ToString())
+
+	deserializedBody := HttpBinGetResponse{}
+	resp.FromJson(&deserializedBody)
+	fmt.Println(deserializedBody.Headers.UserAgent)
 }
