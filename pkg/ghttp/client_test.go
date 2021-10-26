@@ -46,5 +46,9 @@ func TestHttpClient_DoGet(t *testing.T) {
 		Build()
 	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
-	assert.Equal(t, "{\"foo\":\"bar\"}", string(resp.Body))
+	assert.Equal(t, "{\"foo\":\"bar\"}", resp.ToString())
+
+	deserializedBody := make(map[string]string)
+	assert.Nil(t, resp.FromJson(&deserializedBody))
+	assert.Equal(t, map[string]string{"foo": "bar"}, deserializedBody)
 }
