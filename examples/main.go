@@ -32,7 +32,7 @@ func main() {
 		ReadTimeout(10).
 		Logger(log.Default()).
 		Build()
-	resp, err := client.DoGet("/get", nil)
+	resp, err := client.DoGet("/get", nil)  // queries https://httpbin.org/get"
 	if err != nil {
 		log.Fatal(err)
 	}
