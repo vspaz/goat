@@ -16,16 +16,20 @@ const (
 	testEndpoint = "/test-endpoint"
 )
 
+func assertRequest(t *testing.T, request *http.Request) {
+	assert.Equal(t, request.URL.String(), testEndpoint)
+	assert.Equal(t, request.Header["User-Agent"][0], userAgent)
+	assert.Equal(t, request.Header["Content-Type"][0], contentType)
+}
+
 func TestHttpClient_DoGet(t *testing.T) {
 	t.Parallel()
-	encodedBody, _ := json.Marshal(map[string]string{"foo": "bar"})
 	server := httptest.NewServer(
 		http.HandlerFunc(
 			func(writer http.ResponseWriter, request *http.Request) {
-				assert.Equal(t, request.URL.String(), testEndpoint)
-				assert.Equal(t, request.Header["User-Agent"][0], userAgent)
-				assert.Equal(t, request.Header["Content-Type"][0], contentType)
+				assertRequest(t, request)
 				writer.WriteHeader(http.StatusOK)
+				encodedBody, _ := json.Marshal(map[string]string{"foo": "bar"})
 				if _, err := writer.Write(encodedBody); err != nil {
 					t.Fatal(err)
 				}
