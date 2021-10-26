@@ -6,19 +6,6 @@ import (
 	"time"
 )
 
-type ClientBuilder interface {
-	Host(host string) ClientBuilder
-	Auth(user string, password string) ClientBuilder
-	Tls(certFilePath, keyFilePath, CaFilePath string) ClientBuilder
-	UserAgent(userAgent string) ClientBuilder
-	RetryCount(retryCount int) ClientBuilder
-	Delay(delay float64) ClientBuilder
-	ConnTimeout(timeout time.Duration) ClientBuilder
-	ReadTimeout(timeout time.Duration) ClientBuilder
-	Logger(logger *log.Logger) ClientBuilder
-	Build() Client
-}
-
 type clientBuilder struct {
 	host              string
 	basicAuthUser     string
@@ -34,50 +21,50 @@ type clientBuilder struct {
 	logger            *log.Logger
 }
 
-func (b *clientBuilder) Host(host string) ClientBuilder {
+func (b *clientBuilder) Host(host string) *clientBuilder {
 	b.host = host
 	return b
 }
 
-func (b *clientBuilder) Auth(user string, password string) ClientBuilder {
+func (b *clientBuilder) Auth(user string, password string) *clientBuilder {
 	b.basicAuthUser = user
 	b.basicAuthPassword = password
 	return b
 }
 
-func (b *clientBuilder) Tls(certFilePath, keyFilePath, CaFilePath string) ClientBuilder {
+func (b *clientBuilder) Tls(certFilePath, keyFilePath, CaFilePath string) *clientBuilder {
 	b.tlsCertFilePath = certFilePath
 	b.tlsKeyFilePath = keyFilePath
 	b.tlsCaFilePath = CaFilePath
 	return b
 }
 
-func (b *clientBuilder) UserAgent(userAgent string) ClientBuilder {
+func (b *clientBuilder) UserAgent(userAgent string) *clientBuilder {
 	b.userAgent = userAgent
 	return b
 }
 
-func (b *clientBuilder) RetryCount(retryCount int) ClientBuilder {
+func (b *clientBuilder) RetryCount(retryCount int) *clientBuilder {
 	b.retryCount = retryCount
 	return b
 }
 
-func (b *clientBuilder) Delay(delay float64) ClientBuilder {
+func (b *clientBuilder) Delay(delay float64) *clientBuilder {
 	b.delay = delay
 	return b
 }
 
-func (b *clientBuilder) ConnTimeout(timeout time.Duration) ClientBuilder {
+func (b *clientBuilder) ConnTimeout(timeout time.Duration) *clientBuilder {
 	b.connTimeout = timeout
 	return b
 }
 
-func (b *clientBuilder) ReadTimeout(timeout time.Duration) ClientBuilder {
+func (b *clientBuilder) ReadTimeout(timeout time.Duration) *clientBuilder {
 	b.readTimeout = timeout
 	return b
 }
 
-func (b *clientBuilder) Logger(logger *log.Logger) ClientBuilder {
+func (b *clientBuilder) Logger(logger *log.Logger) *clientBuilder {
 	b.logger = logger
 	return b
 }
