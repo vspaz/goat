@@ -22,9 +22,21 @@ func assertRequest(t *testing.T, request *http.Request) {
 	assert.Equal(t, request.Header["Content-Type"][0], contentType)
 }
 
-func TestHttpClient_DoGet(t *testing.T) {
-	t.Parallel()
-	server := httptest.NewServer(
+func createDefaultClient(url string) *GoatClient {
+	return NewClientBuilder().
+		Host(url).
+		UserAgent(userAgent).
+		Auth("user", "pass").
+		RetryCount(1).
+		ConnTimeout(5).
+		Delay(0.5).
+		ReadTimeout(10).
+		Logger(log.Default()).
+		Build()
+}
+
+func getTestServer(t *testing.T) *httptest.Server {
+	return httptest.NewServer(
 		http.HandlerFunc(
 			func(writer http.ResponseWriter, request *http.Request) {
 				assertRequest(t, request)
@@ -36,18 +48,14 @@ func TestHttpClient_DoGet(t *testing.T) {
 			},
 		),
 	)
+}
+
+func TestHttpClient_DoGet(t *testing.T) {
+	t.Parallel()
+	server := getTestServer(t)
 	defer server.Close()
 
-	client := NewClientBuilder().
-		Host(server.URL).
-		UserAgent(userAgent).
-		Auth("user", "pass").
-		RetryCount(1).
-		ConnTimeout(5).
-		Delay(0.5).
-		ReadTimeout(10).
-		Logger(log.Default()).
-		Build()
+	client := createDefaultClient(server.URL)
 	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	assert.Equal(t, "{\"foo\":\"bar\"}", resp.ToString())
