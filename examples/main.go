@@ -39,7 +39,7 @@ func main() {
 	log.Println(resp.StatusCode)
 	log.Println(resp.ToString())
 
-	deserializedBody := HttpBinGetResponse{}
-	resp.FromJson(&deserializedBody)
-	fmt.Println(deserializedBody.Headers.UserAgent)
+	decodedBody := HttpBinGetResponse{}
+	resp.FromJson(&decodedBody)
+	fmt.Println(decodedBody.Headers.UserAgent)
 }
