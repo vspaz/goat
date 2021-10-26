@@ -13,3 +13,4 @@ func toByteBuffer(headers map[string]string, body interface{}) *bytes.Buffer {
 
 	return bytes.NewBuffer([]byte{})
 }
+
