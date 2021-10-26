@@ -8,13 +8,12 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 )
 
 const (
 	userAgent    = "goat"
 	contentType  = "application/json"
-	testEndpoint = "/endpoint"
+	testEndpoint = "/test-endpoint"
 )
 
 func TestHttpClient_DoGet(t *testing.T) {
@@ -39,13 +38,13 @@ func TestHttpClient_DoGet(t *testing.T) {
 		Host(server.URL).
 		UserAgent(userAgent).
 		Auth("user", "pass").
-		RetryCount(3).
-		ConnTimeout(5 * time.Second).
+		RetryCount(1).
+		ConnTimeout(5).
 		Delay(0.5).
-		ReadTimeout(10 * time.Second).
+		ReadTimeout(10).
 		Logger(log.Default()).
 		Build()
-	resp, _ := client.DoGet(testEndpoint, map[string]string{"Content-Type": contentType})
+	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	assert.Equal(t, "{\"foo\":\"bar\"}", string(resp.Body))
 }

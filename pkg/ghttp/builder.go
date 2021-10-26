@@ -54,13 +54,13 @@ func (b *clientBuilder) Delay(delay float64) *clientBuilder {
 	return b
 }
 
-func (b *clientBuilder) ConnTimeout(timeout time.Duration) *clientBuilder {
-	b.connTimeout = timeout
+func (b *clientBuilder) ConnTimeout(timeout int) *clientBuilder {
+	b.connTimeout = time.Duration(timeout) * time.Second
 	return b
 }
 
-func (b *clientBuilder) ReadTimeout(timeout time.Duration) *clientBuilder {
-	b.readTimeout = timeout
+func (b *clientBuilder) ReadTimeout(timeout int) *clientBuilder {
+	b.readTimeout = time.Duration(timeout) * time.Second
 	return b
 }
 

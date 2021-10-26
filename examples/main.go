@@ -3,19 +3,18 @@ package main
 import (
 	"github.com/vspaz/goat/pkg/ghttp"
 	"log"
-	"time"
 )
 
 func main() {
 	client := ghttp.NewClientBuilder().
 		Host("https://httpbin.org").
 		Auth("user", "user-password").
-		Tls("", "", "").  // e.g. cert.pem, key.pem, ca.crt
+		Tls("", "", ""). // e.g. cert.pem, key.pem, ca.crt
 		UserAgent("goat").
 		RetryCount(3).
 		Delay(0.5).
-		ConnTimeout(5 * time.Second).
-		ReadTimeout(10 * time.Second).
+		ConnTimeout(5).
+		ReadTimeout(10).
 		Logger(log.Default()).
 		Build()
 	resp, err := client.DoGet("/get", nil)

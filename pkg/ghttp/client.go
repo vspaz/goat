@@ -7,7 +7,6 @@ import (
 	"time"
 )
 
-
 type GoatClient struct {
 	builder *clientBuilder
 	client  *http.Client
