@@ -9,7 +9,7 @@ configurable HTTP Go client that supports:
 * extra helpers
 * etc.
 
-easily configurable http client build on top of standard http package w/o using any third parties.
+easily configurable http client built on top of a standard http package w/o using any third parties.
 the idea is similar to https://github.com/vspaz/pyclient
 
 ```go
