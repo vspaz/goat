@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/vspaz/goat/pkg/ghttp"
 	"log"
 )
@@ -41,5 +40,14 @@ func main() {
 
 	decodedBody := HttpBinGetResponse{}
 	resp.FromJson(&decodedBody)
-	fmt.Println(decodedBody.Headers.UserAgent)
+	log.Println(decodedBody.Headers.UserAgent)
+
+	// or just
+	client = ghttp.NewClientBuilder().Build()
+	resp, err = client.DoGet("https://httpbin.org", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(resp.StatusCode)
+	log.Println(resp.ToString())
 }

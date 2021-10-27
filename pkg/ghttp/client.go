@@ -63,7 +63,7 @@ func (g *GoatClient) DoRequest(method string, path string, headers map[string]st
 			return resp, nil
 		}
 		delay *= 2
-		time.Sleep(time.Second * time.Duration(delay))
+		time.Sleep(time.Second * delay)
 		g.builder.logger.Printf("attempt: '%d'", attempt)
 	}
 	return nil, err

@@ -16,7 +16,7 @@ type clientBuilder struct {
 	userAgent         string
 	retryCount        int
 	retryOnErrors     []int
-	delay             float64
+	delay             time.Duration
 	connTimeout       time.Duration
 	readTimeout       time.Duration
 	logger            *log.Logger
@@ -52,7 +52,7 @@ func (b *clientBuilder) Retry(count int, onErrors []int) *clientBuilder {
 }
 
 func (b *clientBuilder) Delay(delay float64) *clientBuilder {
-	b.delay = delay
+	b.delay = time.Duration(delay)
 	return b
 }
 
@@ -71,9 +71,28 @@ func (b *clientBuilder) Logger(logger *log.Logger) *clientBuilder {
 	return b
 }
 
+func setDefaults(b *clientBuilder) *clientBuilder {
+	if b.logger == nil {
+		b.logger = log.Default()
+	}
+
+	if b.connTimeout == 0 {
+		b.connTimeout = 5
+	}
+
+	if b.readTimeout == 0 {
+		b.readTimeout = 5
+	}
+
+	if b.delay == 0 {
+		b.delay = 2
+	}
+	return b
+}
+
 func (b *clientBuilder) Build() *GoatClient {
 	return &GoatClient{
-		builder: b,
+		builder: setDefaults(b),
 		client: &http.Client{
 			Timeout: b.connTimeout,
 			Transport: &Auth{
