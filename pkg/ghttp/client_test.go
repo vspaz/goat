@@ -27,7 +27,7 @@ func createDefaultClient(url string) *GoatClient {
 		Host(url).
 		UserAgent(userAgent).
 		Auth("user", "pass").
-		Retry(1, nil).
+		Retry(3, []int{500}).
 		ConnTimeout(5).
 		Delay(0.5).
 		ReadTimeout(10).
@@ -50,7 +50,7 @@ func getTestServer(t *testing.T) *httptest.Server {
 	)
 }
 
-func TestHttpClient_DoGet(t *testing.T) {
+func TestHttpClientDoGet(t *testing.T) {
 	t.Parallel()
 	server := getTestServer(t)
 	defer server.Close()
@@ -63,4 +63,31 @@ func TestHttpClient_DoGet(t *testing.T) {
 	deserializedBody := make(map[string]string)
 	assert.Nil(t, resp.FromJson(&deserializedBody))
 	assert.Equal(t, map[string]string{"foo": "bar"}, deserializedBody)
+}
+
+var retryCount int
+
+func getTestServerForRetries(t *testing.T) *httptest.Server {
+	return httptest.NewServer(
+		http.HandlerFunc(
+			func(writer http.ResponseWriter, request *http.Request) {
+				assertRequest(t, request)
+				if retryCount >= 3 {
+					writer.WriteHeader(http.StatusOK)
+				} else {
+					retryCount += 1
+					writer.WriteHeader(http.StatusInternalServerError)
+				}
+			},
+		),
+	)
+}
+
+func TestGoatClientRetries(t *testing.T) {
+	t.Parallel()
+	server := getTestServerForRetries(t)
+	defer server.Close()
+	client := createDefaultClient(server.URL)
+	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
+	assert.Equal(t, resp.StatusCode, http.StatusOK)
 }
