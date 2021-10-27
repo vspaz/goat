@@ -37,7 +37,7 @@ type HttpBinGetResponse struct {
 
 func main() {
     client := ghttp.NewClientBuilder().
-        Host("https://httpbin.org").  // required 
+        Host("https://httpbin.org").  // optional 
         Auth("user", "user-password").  // optional 
         Tls("cert.pem", "cert.pem", "ca.crt"). // optional 
         UserAgent("goat"). // optional 
@@ -45,7 +45,7 @@ func main() {
         Delay(0.5). // optional
         ConnTimeout(5). // optional 
         ReadTimeout(10). // optional 
-        Logger(log.Default()). // required 
+        Logger(log.Default()). // optional 
         Build()
 	resp, err := client.DoGet("/get", nil)
 	if err != nil {
@@ -56,5 +56,14 @@ func main() {
 
 	deserializedBody := HttpBinGetResponse{}
 	resp.FromJson(&deserializedBody)
+
+	// or just run with default parameters
+	client = ghttp.NewClientBuilder().Build()
+	resp, err = client.DoGet("https://httpbin.org", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(resp.StatusCode)
+	log.Println(resp.ToString())
 }
 ```
