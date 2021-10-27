@@ -27,7 +27,7 @@ func createDefaultClient(url string) *GoatClient {
 		Host(url).
 		UserAgent(userAgent).
 		Auth("user", "pass").
-		RetryCount(1).
+		Retry(1, nil).
 		ConnTimeout(5).
 		Delay(0.5).
 		ReadTimeout(10).

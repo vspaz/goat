@@ -26,7 +26,7 @@ func main() {
 		Auth("user", "user-password").
 		Tls("", "", ""). // e.g. cert.pem, key.pem, ca.crt
 		UserAgent("goat").
-		RetryCount(3).
+		Retry(3, []int{500, 503}).
 		Delay(0.5).
 		ConnTimeout(5).
 		ReadTimeout(10).

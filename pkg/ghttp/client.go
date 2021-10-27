@@ -38,6 +38,18 @@ func (g *GoatClient) doRequest(method string, path string, headers map[string]st
 	}, nil
 }
 
+func isRetryOnError(statusCode int, errorStatusCodes []int) bool {
+	if errorStatusCodes == nil || len(errorStatusCodes) == 0 {
+		return false
+	}
+	for _, errorCode := range errorStatusCodes {
+		if statusCode == errorCode {
+			return true
+		}
+	}
+	return false
+}
+
 func (g *GoatClient) DoRequest(method string, path string, headers map[string]string, body interface{}) (*Response, error) {
 	delay := g.builder.delay
 	if headers == nil {
@@ -46,9 +58,7 @@ func (g *GoatClient) DoRequest(method string, path string, headers map[string]st
 	var err error
 	for attempt := 0; attempt <= g.builder.retryCount; attempt++ {
 		resp, err := g.doRequest(method, path, headers, toByteBuffer(headers, body))
-		g.builder.logger.Printf(resp.Status)
-		g.builder.logger.Printf("%d", resp.StatusCode)
-		if err == nil {
+		if err == nil && !isRetryOnError(resp.StatusCode, g.builder.retryOnErrors){
 			return resp, nil
 		}
 		delay *= 2
