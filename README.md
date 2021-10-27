@@ -43,8 +43,8 @@ func main() {
         UserAgent("goat"). // optional 
         Retry(3, []int{500, 503}). // optional 
         Delay(0.5). // optional
-        ConnTimeout(5). // optional 
-        ReadTimeout(10). // optional 
+        ConnTimeout(5.0). // optional 
+        ReadTimeout(10.0). // optional 
         Logger(log.Default()). // optional 
         Build()
 	resp, err := client.DoGet("/get", nil)
@@ -56,14 +56,15 @@ func main() {
 
 	deserializedBody := HttpBinGetResponse{}
 	resp.FromJson(&deserializedBody)
-
+	
+	
 	// or just run with default parameters
 	client = ghttp.NewClientBuilder().Build()
 	resp, err = client.DoGet("https://httpbin.org", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(resp.StatusCode)
+	log.Println(resp.IsOk())
 	log.Println(resp.ToString())
 }
 ```
