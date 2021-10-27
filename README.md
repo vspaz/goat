@@ -4,7 +4,7 @@ configurable HTTP Go client that supports:
 
 * tls,
 * basic auth
-* retries
+* delayed retries on specific errors
 * timeouts
 * extra helpers
 * etc.
@@ -41,11 +41,11 @@ func main() {
         Auth("user", "user-password").  // optional 
         Tls("cert.pem", "cert.pem", "ca.crt"). // optional 
         UserAgent("goat"). // optional 
-        RetryCount(3). // optional 
-        Delay(0.5). // optional 
+        Retry(3, []int{500, 503}). // optional 
+        Delay(0.5). // optional
         ConnTimeout(5). // optional 
         ReadTimeout(10). // optional 
-        Logger(log.Default()). // optional 
+        Logger(log.Default()). // required 
         Build()
 	resp, err := client.DoGet("/get", nil)
 	if err != nil {
