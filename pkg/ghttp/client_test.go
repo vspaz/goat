@@ -35,7 +35,7 @@ func createDefaultClient(url string) *GoatClient {
 		Build()
 }
 
-func getTestServer(t *testing.T) *httptest.Server {
+func startServer(t *testing.T) *httptest.Server {
 	return httptest.NewServer(
 		http.HandlerFunc(
 			func(writer http.ResponseWriter, request *http.Request) {
@@ -52,7 +52,7 @@ func getTestServer(t *testing.T) *httptest.Server {
 
 func TestHttpClientDoGet(t *testing.T) {
 	t.Parallel()
-	server := getTestServer(t)
+	server := startServer(t)
 	defer server.Close()
 
 	client := createDefaultClient(server.URL)
@@ -67,7 +67,7 @@ func TestHttpClientDoGet(t *testing.T) {
 
 var retryCount int
 
-func getTestServerForRetries(t *testing.T) *httptest.Server {
+func startServerWithRetries(t *testing.T) *httptest.Server {
 	return httptest.NewServer(
 		http.HandlerFunc(
 			func(writer http.ResponseWriter, request *http.Request) {
@@ -85,7 +85,30 @@ func getTestServerForRetries(t *testing.T) *httptest.Server {
 
 func TestGoatClientRetries(t *testing.T) {
 	t.Parallel()
-	server := getTestServerForRetries(t)
+	server := startServerWithRetries(t)
+	defer server.Close()
+	client := createDefaultClient(server.URL)
+	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
+	assert.Equal(t, resp.StatusCode, http.StatusOK)
+}
+
+func startBasicAuthServer(t *testing.T) *httptest.Server {
+	return httptest.NewServer(
+		http.HandlerFunc(
+			func(writer http.ResponseWriter, request *http.Request) {
+				user, password, ok := request.BasicAuth()
+				assert.True(t, ok)
+				assert.Equal(t, user, "user")
+				assert.Equal(t, password, "pass")
+				writer.WriteHeader(http.StatusOK)
+			},
+		),
+	)
+}
+
+func TestGoatClientBasicAuth(t *testing.T) {
+	t.Parallel()
+	server := startBasicAuthServer(t)
 	defer server.Close()
 	client := createDefaultClient(server.URL)
 	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
