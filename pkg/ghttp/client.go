@@ -2,6 +2,7 @@ package ghttp
 
 import (
 	"bytes"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -24,7 +25,12 @@ func (g *GoatClient) doRequest(method string, path string, headers map[string]st
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			g.builder.logger.Fatalf("failed to close body %s", err)
+		}
+	}(resp.Body)
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
