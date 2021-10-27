@@ -77,3 +77,7 @@ func (g *GoatClient) DoPost(path string, headers map[string]string, body interfa
 func (g *GoatClient) DoPut(path string, headers map[string]string, body interface{}) (*Response, error) {
 	return g.DoRequest(http.MethodPut, path, headers, body)
 }
+
+func (g *GoatClient) DoHead(path string, headers map[string]string) (*Response, error) {
+	return g.DoRequest(http.MethodHead, path, headers, nil)
+}
