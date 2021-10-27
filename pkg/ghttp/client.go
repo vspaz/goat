@@ -59,7 +59,7 @@ func (g *GoatClient) DoRequest(method string, path string, headers map[string]st
 	var resp *Response
 	for attempt := 0; attempt <= g.builder.retryCount; attempt++ {
 		resp, err = g.doRequest(method, path, headers, toByteBuffer(headers, body))
-		if err == nil && !isRetryOnError(resp.StatusCode, g.builder.retryOnErrors){
+		if err == nil && !isRetryOnError(resp.StatusCode, g.builder.retryOnErrors) {
 			return resp, nil
 		}
 		delay *= 2
