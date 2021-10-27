@@ -23,3 +23,11 @@ func (r *Response) ToString() string {
 func (r *Response) FromJson(deserialized interface{}) error {
 	return json.Unmarshal(r.ToBytes(), deserialized)
 }
+
+func (r *Response) IsOk() bool {
+	return r.StatusCode == http.StatusOK
+}
+
+func (r *Response) IsAccepted() bool {
+	return r.StatusCode == http.StatusAccepted
+}

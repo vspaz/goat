@@ -42,7 +42,7 @@ func main() {
 	resp.FromJson(&decodedBody)
 	log.Println(decodedBody.Headers.UserAgent)
 
-	// or just run as
+	// or just run as is with default parameters
 	client = ghttp.NewClientBuilder().Build()
 	resp, err = client.DoGet("https://httpbin.org", nil)
 	if err != nil {
