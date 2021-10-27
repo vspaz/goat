@@ -28,8 +28,8 @@ func main() {
 		UserAgent("goat").
 		Retry(3, nil).
 		Delay(0.5).
-		ConnTimeout(5).
-		ReadTimeout(10).
+		ConnTimeout(2.0).
+		ReadTimeout(10.0).
 		Logger(log.Default()).
 		Build()
 	resp, err := client.DoGet("/get", nil)  // queries https://httpbin.org/get"

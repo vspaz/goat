@@ -22,7 +22,7 @@ func (g *GoatClient) doRequest(method string, path string, headers map[string]st
 	req = setHeaders(req, headers)
 	resp, err := g.client.Do(req)
 	if err != nil {
-		g.builder.logger.Fatalf("error: %s", err)
+		return nil, err
 	}
 	defer resp.Body.Close()
 	respBody, err := ioutil.ReadAll(resp.Body)
@@ -56,8 +56,9 @@ func (g *GoatClient) DoRequest(method string, path string, headers map[string]st
 		headers = map[string]string{}
 	}
 	var err error
+	var resp *Response
 	for attempt := 0; attempt <= g.builder.retryCount; attempt++ {
-		resp, err := g.doRequest(method, path, headers, toByteBuffer(headers, body))
+		resp, err = g.doRequest(method, path, headers, toByteBuffer(headers, body))
 		if err == nil && !isRetryOnError(resp.StatusCode, g.builder.retryOnErrors){
 			return resp, nil
 		}

@@ -2,12 +2,12 @@ package ghttp
 
 import (
 	"encoding/json"
-	"log"
-
 	"github.com/stretchr/testify/assert"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 const (
@@ -28,9 +28,9 @@ func createDefaultClient(url string) *GoatClient {
 		UserAgent(userAgent).
 		Auth("user", "pass").
 		Retry(3, []int{500}).
-		ConnTimeout(5).
 		Delay(0.5).
-		ReadTimeout(10).
+		ConnTimeout(2).
+		ReadTimeout(2).
 		Logger(log.Default()).
 		Build()
 }
@@ -113,4 +113,25 @@ func TestGoatClientBasicAuth(t *testing.T) {
 	client := createDefaultClient(server.URL)
 	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
 	assert.Equal(t, resp.StatusCode, http.StatusOK)
+}
+
+func startServerWithTimeouts() *httptest.Server {
+	return httptest.NewServer(
+		http.HandlerFunc(
+			func(writer http.ResponseWriter, request *http.Request) {
+				time.Sleep(5 * time.Second)
+				writer.WriteHeader(http.StatusOK)
+			},
+		),
+	)
+}
+
+func TestGoatClientReadTimeout(t *testing.T) {
+	t.Parallel()
+	server := startServerWithTimeouts()
+	defer server.Close()
+	client := createDefaultClient(server.URL)
+	resp, err := client.DoGet(testEndpoint, contentTypeJson)
+	assert.Nil(t, resp)
+	assert.Contains(t, err.Error(), "Client.Timeout exceeded")
 }
