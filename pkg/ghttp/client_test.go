@@ -57,7 +57,7 @@ func TestHttpClientDoGet(t *testing.T) {
 
 	client := createDefaultClient(server.URL)
 	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
-	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	assert.True(t, resp.IsOk())
 	assert.Equal(t, "{\"foo\":\"bar\"}", resp.ToString())
 
 	deserializedBody := make(map[string]string)
@@ -89,7 +89,7 @@ func TestGoatClientRetries(t *testing.T) {
 	defer server.Close()
 	client := createDefaultClient(server.URL)
 	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
-	assert.Equal(t, resp.StatusCode, http.StatusOK)
+	assert.True(t, resp.IsOk())
 }
 
 func startBasicAuthServer(t *testing.T) *httptest.Server {
@@ -112,7 +112,7 @@ func TestGoatClientBasicAuth(t *testing.T) {
 	defer server.Close()
 	client := createDefaultClient(server.URL)
 	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
-	assert.Equal(t, resp.StatusCode, http.StatusOK)
+	assert.True(t, resp.IsOk())
 }
 
 func startServerWithTimeouts() *httptest.Server {
