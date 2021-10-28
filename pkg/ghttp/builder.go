@@ -75,7 +75,7 @@ func (b *clientBuilder) KeepAlive(timeout float64) *clientBuilder {
 	return b
 }
 
-func (b *clientBuilder) IdeleConnectionTimeout(timeout float64) *clientBuilder {
+func (b *clientBuilder) IdleConnectionTimeout(timeout float64) *clientBuilder {
 	b.idleConnectionTimeout = time.Duration(timeout) * time.Second
 	return b
 }
