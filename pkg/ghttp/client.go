@@ -14,7 +14,7 @@ type GoatClient struct {
 }
 
 func (g *GoatClient) doRequest(method string, path string, headers map[string]string, body *bytes.Buffer) (*Response, error) {
-	g.builder.logger.Printf("making request to: '%s'", g.builder.host+path)
+	g.builder.logger.Info("making request to: '%s'", g.builder.host+path)
 	req, err := http.NewRequest(method, g.builder.host+path, body)
 	if err != nil {
 		g.builder.logger.Fatal(err)
@@ -32,9 +32,10 @@ func (g *GoatClient) doRequest(method string, path string, headers map[string]st
 	}(resp.Body)
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		g.builder.logger.Error(err)
 		return nil, err
 	}
-	g.builder.logger.Printf("status code: '%d'", resp.StatusCode)
+	g.builder.logger.Debug("status code: '%d'", resp.StatusCode)
 	return &Response{
 		Status:     resp.Status,
 		StatusCode: resp.StatusCode,
@@ -70,7 +71,7 @@ func (g *GoatClient) DoRequest(method string, path string, headers map[string]st
 		}
 		delay *= 2
 		time.Sleep(time.Second * delay)
-		g.builder.logger.Printf("attempt: '%d'", attempt)
+		g.builder.logger.Warnf("attempt: '%d'", attempt)
 	}
 	return nil, err
 }
