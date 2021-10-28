@@ -1,7 +1,7 @@
 package ghttp
 
 import (
-	"log"
+	"github.com/sirupsen/logrus"
 	"net"
 	"net/http"
 	"time"
@@ -24,7 +24,7 @@ type clientBuilder struct {
 	idleConnectionTimeout time.Duration
 	tlsHandshakeTimeout   time.Duration
 	headersReadTimeout    time.Duration
-	logger                *log.Logger
+	logger                *logrus.Logger
 }
 
 func (b *clientBuilder) Host(host string) *clientBuilder {
@@ -91,14 +91,14 @@ func (b *clientBuilder) TlsHandshakeTimeout(timeout float64) *clientBuilder {
 	return b
 }
 
-func (b *clientBuilder) Logger(logger *log.Logger) *clientBuilder {
+func (b *clientBuilder) Logger(logger *logrus.Logger) *clientBuilder {
 	b.logger = logger
 	return b
 }
 
 func setDefaults(b *clientBuilder) *clientBuilder {
 	if b.logger == nil {
-		b.logger = log.Default()
+		b.logger = &logrus.Logger{};
 	}
 
 	if b.responseTimeout == 0 {

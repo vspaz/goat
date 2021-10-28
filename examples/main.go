@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/vspaz/goat/pkg/ghttp"
-	"log"
 )
 
 type HttpBinGetResponse struct {
@@ -20,6 +19,7 @@ type HttpBinGetResponse struct {
 }
 
 func main() {
+	logger := ghttp.ConfigureLogger()
 	client := ghttp.NewClientBuilder().
 		Host("https://httpbin.org").
 		Auth("user", "user-password").
@@ -29,25 +29,25 @@ func main() {
 		Delay(0.5).
 		ResponseTimeout(10.0).
 		HeadersReadTimeout(2.0).
-		Logger(log.Default()).
+		Logger(logger).
 		Build()
 	resp, err := client.DoGet("/get", nil) // queries https://httpbin.org/get"
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
-	log.Println(resp.StatusCode)
-	log.Println(resp.ToString())
+	logger.Println(resp.StatusCode)
+	logger.Println(resp.ToString())
 
 	decodedBody := HttpBinGetResponse{}
 	resp.FromJson(&decodedBody)
-	log.Println(decodedBody.Headers.UserAgent)
+	logger.Println(decodedBody.Headers.UserAgent)
 
 	// or just run as is with default parameters
 	client = ghttp.NewClientBuilder().Build()
-	resp, err = client.DoGet("https://httpbin.org", nil)
+	resp, err = client.DoGet("https://httpbin.org/get", nil)
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
-	log.Println(resp.StatusCode)
-	log.Println(resp.ToString())
+	logger.Println(resp.StatusCode)
+	logger.Println(resp.ToString())
 }
