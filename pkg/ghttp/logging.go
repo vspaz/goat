@@ -6,6 +6,7 @@ type Level uint32
 
 const (
 	PanicLevel = iota
+	FatalLevel
 	ErrorLevel
 	WarnLevel
 	InfoLevel
@@ -17,6 +18,8 @@ func getLogLevel(logLevel string) int {
 	switch logLevel {
 	case "panic":
 		return PanicLevel
+	case "fatal":
+		return FatalLevel
 	case "error":
 		return ErrorLevel
 	case "warning":
@@ -34,10 +37,10 @@ func getLogLevel(logLevel string) int {
 
 func ConfigureLogger(logLevel string) *logrus.Logger {
 	logger := logrus.New()
-	customFormatter := new(logrus.TextFormatter)
-	customFormatter.TimestampFormat = "2006-01-02 15:04:05.000"
-	customFormatter.FullTimestamp = true
-	logger.SetFormatter(customFormatter)
+	formatter := new(logrus.TextFormatter)
+	formatter.TimestampFormat = "2006-01-02 15:04:05.000"
+	formatter.FullTimestamp = true
+	logger.SetFormatter(formatter)
 	logger.SetReportCaller(true)
 	logger.SetLevel(logrus.Level(getLogLevel(logLevel)))
 	return logger

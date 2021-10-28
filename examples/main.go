@@ -28,10 +28,10 @@ func main() {
 		Delay(0.5).
 		ResponseTimeout(10.0).
 		HeadersReadTimeout(2.0).
-		LogLevel("debug").
+		LogLevel("info").
 		Build()
 	resp, err := client.DoGet("/get", nil) // queries https://httpbin.org/get"
-	logger := ghttp.ConfigureLogger("debug")
+	logger := ghttp.ConfigureLogger("info")
 	if err != nil {
 		logger.Fatal(err)
 	}
