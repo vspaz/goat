@@ -3,7 +3,6 @@ package ghttp
 import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -44,8 +43,7 @@ func TestHttpClientDoGetHeaders(t *testing.T) {
 		Host(server.URL).
 		UserAgent(userAgent).
 		Build()
-	resp, err := client.DoGet(testEndpoint, contentTypeJson)
-	log.Print(err)
+	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
 	assert.True(t, resp.IsOk())
 	assert.Equal(t, "{\"foo\":\"bar\"}", resp.ToString())
 
