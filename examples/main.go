@@ -19,7 +19,6 @@ type HttpBinGetResponse struct {
 }
 
 func main() {
-	logger := ghttp.ConfigureLogger()
 	client := ghttp.NewClientBuilder().
 		Host("https://httpbin.org").
 		Auth("user", "user-password").
@@ -29,18 +28,19 @@ func main() {
 		Delay(0.5).
 		ResponseTimeout(10.0).
 		HeadersReadTimeout(2.0).
-		Logger(logger).
+		LogLevel("debug").
 		Build()
 	resp, err := client.DoGet("/get", nil) // queries https://httpbin.org/get"
+	logger := ghttp.ConfigureLogger("debug")
 	if err != nil {
 		logger.Fatal(err)
 	}
-	logger.Println(resp.StatusCode)
-	logger.Println(resp.ToString())
+	logger.Info(resp.StatusCode)
+	logger.Info(resp.ToString())
 
 	decodedBody := HttpBinGetResponse{}
 	resp.FromJson(&decodedBody)
-	logger.Println(decodedBody.Headers.UserAgent)
+	logger.Info(decodedBody.Headers.UserAgent)
 
 	// or just run as is with default parameters
 	client = ghttp.NewClientBuilder().Build()
@@ -48,6 +48,6 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
-	logger.Println(resp.StatusCode)
-	logger.Println(resp.ToString())
+	logger.Info(resp.StatusCode)
+	logger.Info(resp.ToString())
 }

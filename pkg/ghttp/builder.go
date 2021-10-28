@@ -91,14 +91,14 @@ func (b *clientBuilder) TlsHandshakeTimeout(timeout float64) *clientBuilder {
 	return b
 }
 
-func (b *clientBuilder) Logger(logger *logrus.Logger) *clientBuilder {
-	b.logger = logger
+func (b *clientBuilder) LogLevel(logLevel string) *clientBuilder {
+	b.logger = ConfigureLogger(logLevel)
 	return b
 }
 
 func setDefaults(b *clientBuilder) *clientBuilder {
 	if b.logger == nil {
-		b.logger = &logrus.Logger{};
+		b.logger = ConfigureLogger("info")
 	}
 
 	if b.responseTimeout == 0 {
