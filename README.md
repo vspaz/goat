@@ -39,13 +39,16 @@ func main() {
     client := ghttp.NewClientBuilder().
         Host("https://httpbin.org").  // optional 
         Auth("user", "user-password").  // optional 
-        Tls("cert.pem", "cert.pem", "ca.crt"). // optional 
-        UserAgent("goat"). // optional 
+        Tls("cert.pem", "cert.pem", "ca.crt"). // optional
+		TlsHandshakeTimeout(10.0).  // optional
+        UserAgent("goat"). // optional
         Retry(3, []int{500, 503}). // optional 
         Delay(0.5). // optional
 		ResponseTimeout(10.0).  // optional
+		ConnectionTimeout(2.0).  // optional
 		HeadersReadTimeout(2.0).  // optional
-        Logger(log.Default()). // optional 
+		KeepAlive(60 * 2).  //optional
+        LogLevel("info").  // optional 
         Build()
 	resp, err := client.DoGet("/get", nil)
 	if err != nil {
@@ -56,7 +59,6 @@ func main() {
 
 	deserializedBody := HttpBinGetResponse{}
 	resp.FromJson(&deserializedBody)
-	
 	
 	// or just run with default parameters
 	client = ghttp.NewClientBuilder().Build()
