@@ -22,6 +22,7 @@ type clientBuilder struct {
 	connectionTimeout     time.Duration
 	keepAlive             time.Duration
 	idleConnectionTimeout time.Duration
+	tlsHandshakeTimeout   time.Duration
 	headersReadTimeout    time.Duration
 	logger                *log.Logger
 }
@@ -85,6 +86,11 @@ func (b *clientBuilder) HeadersReadTimeout(timeout float64) *clientBuilder {
 	return b
 }
 
+func (b *clientBuilder) TlsHandshakeTimeout(timeout float64) *clientBuilder {
+	b.tlsHandshakeTimeout = time.Duration(timeout) * time.Second
+	return b
+}
+
 func (b *clientBuilder) Logger(logger *log.Logger) *clientBuilder {
 	b.logger = logger
 	return b
@@ -115,6 +121,10 @@ func setDefaults(b *clientBuilder) *clientBuilder {
 		b.idleConnectionTimeout = time.Duration(2*60) * time.Second
 	}
 
+	if b.tlsHandshakeTimeout == 0 {
+		b.tlsHandshakeTimeout = time.Duration(10) * time.Second
+	}
+
 	if b.delay == 0 {
 		b.delay = time.Duration(1)
 	}
@@ -135,6 +145,7 @@ func (b *clientBuilder) Build() *GoatClient {
 					}).DialContext,
 					IdleConnTimeout:       b.idleConnectionTimeout,
 					ResponseHeaderTimeout: b.headersReadTimeout,
+					TLSHandshakeTimeout:   b.tlsHandshakeTimeout,
 					TLSClientConfig: createTlsConfig(
 						b.tlsCertFilePath,
 						b.tlsKeyFilePath,
