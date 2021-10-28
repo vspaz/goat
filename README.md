@@ -5,7 +5,8 @@ configurable HTTP Go client that supports:
 * tls,
 * basic auth
 * delayed retries on specific errors
-* timeouts
+* timeouts (connection, read, idle etc.)
+* keep-alive connections
 * extra helpers
 * etc.
 
