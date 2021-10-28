@@ -39,8 +39,8 @@ func main() {
     client := ghttp.NewClientBuilder().
         Host("https://httpbin.org").  // optional 
         Auth("user", "user-password").  // optional 
-        Tls("cert.pem", "cert.pem", "ca.crt"). // optional
-		TlsHandshakeTimeout(10.0).  // optional
+        Tls("cert.pem", "cert.pem", "ca.crt"). // optional 
+        TlsHandshakeTimeout(10.0).  // optional
         UserAgent("goat"). // optional
         Retry(3, []int{500, 503}). // optional 
         Delay(0.5).  // optional
