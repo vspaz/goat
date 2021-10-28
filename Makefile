@@ -6,7 +6,7 @@ build:
 
 .PHONY: test
 test:
-	go test -race ./...
+	go test -race ./pkg/ghttp -v
 
 .PHONY: clean
 clean:

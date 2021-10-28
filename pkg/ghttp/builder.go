@@ -7,19 +7,19 @@ import (
 )
 
 type clientBuilder struct {
-	host              string
-	basicAuthUser     string
-	basicAuthPassword string
-	tlsCertFilePath   string
-	tlsKeyFilePath    string
-	tlsCaFilePath     string
-	userAgent         string
-	retryCount        int
-	retryOnErrors     []int
-	delay             time.Duration
-	connTimeout       time.Duration
-	readTimeout       time.Duration
-	logger            *log.Logger
+	host               string
+	basicAuthUser      string
+	basicAuthPassword  string
+	tlsCertFilePath    string
+	tlsKeyFilePath     string
+	tlsCaFilePath      string
+	userAgent          string
+	retryCount         int
+	retryOnErrors      []int
+	delay              time.Duration
+	responseTimeout    time.Duration
+	headersReadTimeout time.Duration
+	logger             *log.Logger
 }
 
 func (b *clientBuilder) Host(host string) *clientBuilder {
@@ -56,13 +56,13 @@ func (b *clientBuilder) Delay(delay float64) *clientBuilder {
 	return b
 }
 
-func (b *clientBuilder) ConnTimeout(timeout float64) *clientBuilder {
-	b.connTimeout = time.Duration(timeout) * time.Second
+func (b *clientBuilder) ResponseTimeout(timeout float64) *clientBuilder {
+	b.responseTimeout = time.Duration(timeout) * time.Second
 	return b
 }
 
-func (b *clientBuilder) ReadTimeout(timeout float64) *clientBuilder {
-	b.readTimeout = time.Duration(timeout) * time.Second
+func (b *clientBuilder) HeadersReadTimeout(timeout float64) *clientBuilder {
+	b.headersReadTimeout = time.Duration(timeout) * time.Second
 	return b
 }
 
@@ -76,28 +76,29 @@ func setDefaults(b *clientBuilder) *clientBuilder {
 		b.logger = log.Default()
 	}
 
-	if b.connTimeout == 0 {
-		b.connTimeout = 5
+	if b.responseTimeout == 0 {
+		b.responseTimeout = time.Duration(5) * time.Second
 	}
 
-	if b.readTimeout == 0 {
-		b.readTimeout = 5
+	if b.headersReadTimeout == 0 {
+		b.headersReadTimeout = time.Duration(5) * time.Second
 	}
 
 	if b.delay == 0 {
-		b.delay = 2
+		b.delay = time.Duration(1)
 	}
 	return b
 }
 
 func (b *clientBuilder) Build() *GoatClient {
+	b = setDefaults(b)
 	return &GoatClient{
-		builder: setDefaults(b),
+		builder: b,
 		client: &http.Client{
-			Timeout: b.connTimeout,
+			Timeout: b.responseTimeout,
 			Transport: &Auth{
 				&http.Transport{
-					ResponseHeaderTimeout: b.readTimeout,
+					ResponseHeaderTimeout: b.headersReadTimeout,
 					TLSClientConfig: createTlsConfig(
 						b.tlsCertFilePath,
 						b.tlsKeyFilePath,

@@ -19,7 +19,6 @@ func (g *GoatClient) doRequest(method string, path string, headers map[string]st
 	if err != nil {
 		g.builder.logger.Fatal(err)
 	}
-	headers["User-Agent"] = g.builder.userAgent
 	req = setHeaders(req, headers)
 	resp, err := g.client.Do(req)
 	if err != nil {
@@ -61,6 +60,7 @@ func (g *GoatClient) DoRequest(method string, path string, headers map[string]st
 	if headers == nil {
 		headers = map[string]string{}
 	}
+	headers["User-Agent"] = g.builder.userAgent
 	var err error
 	var resp *Response
 	for attempt := 0; attempt <= g.builder.retryCount; attempt++ {

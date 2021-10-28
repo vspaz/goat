@@ -43,8 +43,8 @@ func main() {
         UserAgent("goat"). // optional 
         Retry(3, []int{500, 503}). // optional 
         Delay(0.5). // optional
-        ConnTimeout(5.0). // optional 
-        ReadTimeout(10.0). // optional 
+		ResponseTimeout(10.0).  // optional
+		HeadersReadTimeout(2.0).  // optional
         Logger(log.Default()). // optional 
         Build()
 	resp, err := client.DoGet("/get", nil)
