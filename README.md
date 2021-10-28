@@ -1,17 +1,20 @@
 # goat
 
-configurable HTTP Go client that supports:
+Goat, is an HTTP client built on top of a standard Go http package, that is extremely easy to configure; no googling
+required. The idea is similar to https://github.com/vspaz/pyclient
+it supports out of the box:
 
-* tls,
+* TLS,
 * basic auth
 * delayed retries on specific errors
 * timeouts (connection, read, idle etc.)
 * keep-alive connections
 * extra helpers
+* logging
 * etc.
 
-easily configurable http client built on top of a standard http package w/o using any third parties.
-the idea is similar to https://github.com/vspaz/pyclient
+still, if you don't wish any configuration, you can you use it as is with default parameters. Please, see the examples
+below:
 
 ```go
 package main
@@ -36,20 +39,21 @@ type HttpBinGetResponse struct {
 }
 
 func main() {
-    client := ghttp.NewClientBuilder().
-        Host("https://httpbin.org").  // optional 
-        Auth("user", "user-password").  // optional 
-        Tls("cert.pem", "cert.pem", "ca.crt"). // optional 
-        TlsHandshakeTimeout(10.0).  // optional
-        UserAgent("goat"). // optional
-        Retry(3, []int{500, 503}). // optional 
-        Delay(0.5).  // optional
-        ResponseTimeout(10.0).  // optional
-        ConnectionTimeout(2.0).  // optional 
-        HeadersReadTimeout(2.0).  // optional 
-        KeepAlive(60 * 2).  //optional
-        LogLevel("info").  // optional 
-        Build()
+	client := ghttp.NewClientBuilder().
+		Host("https://httpbin.org"). // optional 
+		Auth("user", "user-password"). // optional 
+		Tls("cert.pem", "cert.pem", "ca.crt"). // optional 
+		TlsHandshakeTimeout(10.0). // optional
+		UserAgent("goat"). // optional
+		Retry(3, []int{500, 503}). // optional 
+		Delay(0.5). // optional
+		ResponseTimeout(10.0). // optional
+		ConnectionTimeout(2.0). // optional 
+		HeadersReadTimeout(2.0). // optional 
+		KeepAlive(60 * 2). //optional
+		LogLevel("info"). // optional 
+		Build()
+
 	resp, err := client.DoGet("/get", nil)
 	if err != nil {
 		log.Fatal(err)
@@ -59,7 +63,7 @@ func main() {
 
 	deserializedBody := HttpBinGetResponse{}
 	resp.FromJson(&deserializedBody)
-	
+
 	// or just run with default parameters
 	client = ghttp.NewClientBuilder().Build()
 	resp, err = client.DoGet("https://httpbin.org", nil)
