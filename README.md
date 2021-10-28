@@ -43,11 +43,11 @@ func main() {
 		TlsHandshakeTimeout(10.0).  // optional
         UserAgent("goat"). // optional
         Retry(3, []int{500, 503}). // optional 
-        Delay(0.5). // optional
-		ResponseTimeout(10.0).  // optional
-		ConnectionTimeout(2.0).  // optional
-		HeadersReadTimeout(2.0).  // optional
-		KeepAlive(60 * 2).  //optional
+        Delay(0.5).  // optional
+        ResponseTimeout(10.0).  // optional
+        ConnectionTimeout(2.0).  // optional 
+        HeadersReadTimeout(2.0).  // optional 
+        KeepAlive(60 * 2).  //optional
         LogLevel("info").  // optional 
         Build()
 	resp, err := client.DoGet("/get", nil)
