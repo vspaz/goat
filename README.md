@@ -16,7 +16,6 @@ the idea is similar to https://github.com/vspaz/pyclient
 package main
 
 import (
-	"fmt"
 	"github.com/vspaz/goat/pkg/ghttp"
 	"log"
 )

@@ -2,6 +2,7 @@ package ghttp
 
 import (
 	"log"
+	"net"
 	"net/http"
 	"time"
 )
@@ -18,6 +19,8 @@ type clientBuilder struct {
 	retryOnErrors      []int
 	delay              time.Duration
 	responseTimeout    time.Duration
+	connectionTimeout  time.Duration
+	keepAlive          time.Duration
 	headersReadTimeout time.Duration
 	logger             *log.Logger
 }
@@ -61,6 +64,16 @@ func (b *clientBuilder) ResponseTimeout(timeout float64) *clientBuilder {
 	return b
 }
 
+func (b *clientBuilder) ConnectionTimeout(timeout float64) *clientBuilder {
+	b.connectionTimeout = time.Duration(timeout) * time.Second
+	return b
+}
+
+func (b *clientBuilder) KeepAlive(timeout float64) *clientBuilder {
+	b.keepAlive = time.Duration(timeout) * time.Second
+	return b
+}
+
 func (b *clientBuilder) HeadersReadTimeout(timeout float64) *clientBuilder {
 	b.headersReadTimeout = time.Duration(timeout) * time.Second
 	return b
@@ -78,6 +91,14 @@ func setDefaults(b *clientBuilder) *clientBuilder {
 
 	if b.responseTimeout == 0 {
 		b.responseTimeout = time.Duration(5) * time.Second
+	}
+
+	if b.connectionTimeout == 0 {
+		b.connectionTimeout = time.Duration(5) * time.Second
+	}
+
+	if b.keepAlive == 0 {
+		b.keepAlive = time.Duration(2*60) * time.Second
 	}
 
 	if b.headersReadTimeout == 0 {
@@ -98,7 +119,11 @@ func (b *clientBuilder) Build() *GoatClient {
 			Timeout: b.responseTimeout,
 			Transport: &Auth{
 				&http.Transport{
-					ResponseHeaderTimeout: b.headersReadTimeout,
+					DialContext: (&net.Dialer{
+						Timeout:   b.connectionTimeout,
+						KeepAlive: b.keepAlive,
+					}).DialContext,
+					ResponseHeaderTimeout: 10 * b.headersReadTimeout,
 					TLSClientConfig: createTlsConfig(
 						b.tlsCertFilePath,
 						b.tlsKeyFilePath,
