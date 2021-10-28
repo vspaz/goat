@@ -8,21 +8,22 @@ import (
 )
 
 type clientBuilder struct {
-	host               string
-	basicAuthUser      string
-	basicAuthPassword  string
-	tlsCertFilePath    string
-	tlsKeyFilePath     string
-	tlsCaFilePath      string
-	userAgent          string
-	retryCount         int
-	retryOnErrors      []int
-	delay              time.Duration
-	responseTimeout    time.Duration
-	connectionTimeout  time.Duration
-	keepAlive          time.Duration
-	headersReadTimeout time.Duration
-	logger             *log.Logger
+	host                  string
+	basicAuthUser         string
+	basicAuthPassword     string
+	tlsCertFilePath       string
+	tlsKeyFilePath        string
+	tlsCaFilePath         string
+	userAgent             string
+	retryCount            int
+	retryOnErrors         []int
+	delay                 time.Duration
+	responseTimeout       time.Duration
+	connectionTimeout     time.Duration
+	keepAlive             time.Duration
+	idleConnectionTimeout time.Duration
+	headersReadTimeout    time.Duration
+	logger                *log.Logger
 }
 
 func (b *clientBuilder) Host(host string) *clientBuilder {
@@ -74,6 +75,11 @@ func (b *clientBuilder) KeepAlive(timeout float64) *clientBuilder {
 	return b
 }
 
+func (b *clientBuilder) IdeleConnectionTimeout(timeout float64) *clientBuilder {
+	b.idleConnectionTimeout = time.Duration(timeout) * time.Second
+	return b
+}
+
 func (b *clientBuilder) HeadersReadTimeout(timeout float64) *clientBuilder {
 	b.headersReadTimeout = time.Duration(timeout) * time.Second
 	return b
@@ -105,6 +111,10 @@ func setDefaults(b *clientBuilder) *clientBuilder {
 		b.headersReadTimeout = time.Duration(5) * time.Second
 	}
 
+	if b.idleConnectionTimeout == 0 {
+		b.idleConnectionTimeout = time.Duration(2*60) * time.Second
+	}
+
 	if b.delay == 0 {
 		b.delay = time.Duration(1)
 	}
@@ -123,7 +133,8 @@ func (b *clientBuilder) Build() *GoatClient {
 						Timeout:   b.connectionTimeout,
 						KeepAlive: b.keepAlive,
 					}).DialContext,
-					ResponseHeaderTimeout: 10 * b.headersReadTimeout,
+					IdleConnTimeout:       b.idleConnectionTimeout,
+					ResponseHeaderTimeout: b.headersReadTimeout,
 					TLSClientConfig: createTlsConfig(
 						b.tlsCertFilePath,
 						b.tlsKeyFilePath,
