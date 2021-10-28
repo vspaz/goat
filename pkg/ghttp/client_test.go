@@ -118,7 +118,7 @@ func startServerWithTimeouts() *httptest.Server {
 	)
 }
 
-func TestGoatClientConnTimeout(t *testing.T) {
+func TestGoatClientResponseTimeout(t *testing.T) {
 	server := startServerWithTimeouts()
 	defer server.Close()
 	client := NewClientBuilder().
