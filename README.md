@@ -40,18 +40,17 @@ type HttpBinGetResponse struct {
 
 func main() {
 	client := ghttp.NewClientBuilder().
-		Host("https://httpbin.org"). // optional 
-		Auth("user", "user-password"). // optional 
-		Tls("cert.pem", "cert.pem", "ca.crt"). // optional 
-		TlsHandshakeTimeout(10.0). // optional
-		UserAgent("goat"). // optional
-		Retry(3, []int{500, 503}). // optional 
-		Delay(0.5). // optional
-		ResponseTimeout(10.0). // optional
-		ConnectionTimeout(2.0). // optional 
-		HeadersReadTimeout(2.0). // optional 
-		KeepAlive(60 * 2). //optional
-		LogLevel("info"). // optional 
+		WithHost("https://httpbin.org"). // optional 
+		WithAuth("user", "user-password"). // optional 
+		WithTls("cert.pem", "cert.pem", "ca.crt"). // optional 
+		WithTlsHandshakeTimeout(10.0). // optional
+		WithUserAgent("goat"). // optional
+		WithRetry(3, []int{500, 503}). // optional 
+		WithDelay(0.5). // optional
+		WithResponseTimeout(10.0). // optional
+		WithConnectionTimeout(2.0). // optional 
+		WithHeadersReadTimeout(2.0). // optional
+		WithLogLevel("info"). // optional 
 		Build()
 
 	resp, err := client.DoGet("/get", nil)
