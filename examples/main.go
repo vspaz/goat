@@ -20,15 +20,15 @@ type HttpBinGetResponse struct {
 
 func main() {
 	client := ghttp.NewClientBuilder().
-		Host("https://httpbin.org").
-		Auth("user", "user-password").
-		Tls("", "", ""). // e.g. cert.pem, key.pem, ca.crt
-		UserAgent("goat").
-		Retry(3, nil).
-		Delay(0.5).
-		ResponseTimeout(10.0).
-		HeadersReadTimeout(2.0).
-		LogLevel("info").
+		WithHost("https://httpbin.org").
+		WithAuth("user", "user-password").
+		WithTls("", "", ""). // e.g. cert.pem, key.pem, ca.crt
+		WithUserAgent("goat").
+		WithRetry(3, nil).
+		WithDelay(0.5).
+		WithResponseTimeout(10.0).
+		WithHeadersReadTimeout(2.0).
+		WithLogLevel("info").
 		Build()
 	resp, err := client.DoGet("/get", nil) // queries https://httpbin.org/get"
 	logger := ghttp.ConfigureLogger("info")
