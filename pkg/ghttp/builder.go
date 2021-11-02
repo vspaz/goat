@@ -27,71 +27,71 @@ type clientBuilder struct {
 	logger                *logrus.Logger
 }
 
-func (b *clientBuilder) Host(host string) *clientBuilder {
+func (b *clientBuilder) WithHost(host string) *clientBuilder {
 	b.host = host
 	return b
 }
 
-func (b *clientBuilder) Auth(user string, password string) *clientBuilder {
+func (b *clientBuilder) WithAuth(user string, password string) *clientBuilder {
 	b.basicAuthUser = user
 	b.basicAuthPassword = password
 	return b
 }
 
-func (b *clientBuilder) Tls(certFilePath, keyFilePath, CaFilePath string) *clientBuilder {
+func (b *clientBuilder) WithTls(certFilePath, keyFilePath, CaFilePath string) *clientBuilder {
 	b.tlsCertFilePath = certFilePath
 	b.tlsKeyFilePath = keyFilePath
 	b.tlsCaFilePath = CaFilePath
 	return b
 }
 
-func (b *clientBuilder) UserAgent(userAgent string) *clientBuilder {
+func (b *clientBuilder) WithUserAgent(userAgent string) *clientBuilder {
 	b.userAgent = userAgent
 	return b
 }
 
-func (b *clientBuilder) Retry(count int, onErrors []int) *clientBuilder {
+func (b *clientBuilder) WithRetry(count int, onErrors []int) *clientBuilder {
 	b.retryCount = count
 	b.retryOnErrors = onErrors
 	return b
 }
 
-func (b *clientBuilder) Delay(delay float64) *clientBuilder {
+func (b *clientBuilder) WithDelay(delay float64) *clientBuilder {
 	b.delay = time.Duration(delay)
 	return b
 }
 
-func (b *clientBuilder) ResponseTimeout(timeout float64) *clientBuilder {
+func (b *clientBuilder) WithResponseTimeout(timeout float64) *clientBuilder {
 	b.responseTimeout = time.Duration(timeout) * time.Second
 	return b
 }
 
-func (b *clientBuilder) ConnectionTimeout(timeout float64) *clientBuilder {
+func (b *clientBuilder) WithConnectionTimeout(timeout float64) *clientBuilder {
 	b.connectionTimeout = time.Duration(timeout) * time.Second
 	return b
 }
 
-func (b *clientBuilder) KeepAlive(timeout float64) *clientBuilder {
+func (b *clientBuilder) WithKeepAlive(timeout float64) *clientBuilder {
 	b.keepAlive = time.Duration(timeout) * time.Second
 	return b
 }
 
-func (b *clientBuilder) IdleConnectionTimeout(timeout float64) *clientBuilder {
+func (b *clientBuilder) WithIdleConnectionTimeout(timeout float64) *clientBuilder {
 	b.idleConnectionTimeout = time.Duration(timeout) * time.Second
 	return b
 }
 
-func (b *clientBuilder) HeadersReadTimeout(timeout float64) *clientBuilder {
+func (b *clientBuilder) WithHeadersReadTimeout(timeout float64) *clientBuilder {
 	b.headersReadTimeout = time.Duration(timeout) * time.Second
 	return b
 }
 
-func (b *clientBuilder) TlsHandshakeTimeout(timeout float64) *clientBuilder {
+func (b *clientBuilder) WithTlsHandshakeTimeout(timeout float64) *clientBuilder {
 	b.tlsHandshakeTimeout = time.Duration(timeout) * time.Second
 	return b
 }
 
-func (b *clientBuilder) LogLevel(logLevel string) *clientBuilder {
+func (b *clientBuilder) WithLogLevel(logLevel string) *clientBuilder {
 	b.logger = ConfigureLogger(logLevel)
 	return b
 }
