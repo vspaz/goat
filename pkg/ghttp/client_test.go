@@ -40,8 +40,8 @@ func TestHttpClientDoGetHeaders(t *testing.T) {
 	server := startServer(t)
 	defer server.Close()
 	client := NewClientBuilder().
-		Host(server.URL).
-		UserAgent(userAgent).
+		WithHost(server.URL).
+		WithUserAgent(userAgent).
 		Build()
 	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
 	assert.True(t, resp.IsOk())
@@ -73,8 +73,8 @@ func TestGoatClientRetries(t *testing.T) {
 	server := startServerWithRetries(t)
 	defer server.Close()
 	client := NewClientBuilder().
-		Host(server.URL).
-		Retry(2, []int{500}).
+		WithHost(server.URL).
+		WithRetry(2, []int{500}).
 		Build()
 	resp, _ := client.DoGet(testEndpoint, nil)
 	assert.True(t, resp.IsOk())
@@ -98,8 +98,8 @@ func TestGoatClientBasicAuth(t *testing.T) {
 	server := startBasicAuthServer(t)
 	defer server.Close()
 	client := NewClientBuilder().
-		Host(server.URL).
-		Auth("user", "pass").
+		WithHost(server.URL).
+		WithAuth("user", "pass").
 		Build()
 	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
 	assert.True(t, resp.IsOk())
@@ -120,8 +120,8 @@ func TestGoatClientResponseTimeout(t *testing.T) {
 	server := startServerWithTimeouts()
 	defer server.Close()
 	client := NewClientBuilder().
-		Host(server.URL).
-		ResponseTimeout(1).
+		WithHost(server.URL).
+		WithResponseTimeout(1).
 		Build()
 	resp, err := client.DoGet(testEndpoint, contentTypeJson)
 	assert.Nil(t, resp)
