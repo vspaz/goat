@@ -127,3 +127,22 @@ func TestGoatClientResponseTimeout(t *testing.T) {
 	assert.Nil(t, resp)
 	assert.Contains(t, err.Error(), "Client.Timeout exceeded")
 }
+
+func startServerToAssertQueryParams(t *testing.T) *httptest.Server {
+	return httptest.NewServer(
+		http.HandlerFunc(
+			func(writer http.ResponseWriter, request *http.Request) {
+			},
+		),
+	)
+}
+
+func TestQueryParams(t *testing.T) {
+	server := startServerToAssertQueryParams(t)
+	defer server.Close()
+	client := NewClientBuilder().
+		WithHost(server.URL).
+		Build()
+	resp, _ := client.DoGet(testEndpoint, nil, map[string]string{"foo": "bar"})
+	assert.True(t, resp.IsOk())
+}
