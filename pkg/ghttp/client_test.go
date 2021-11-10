@@ -43,7 +43,7 @@ func TestHttpClientDoGetHeaders(t *testing.T) {
 		WithHost(server.URL).
 		WithUserAgent(userAgent).
 		Build()
-	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
+	resp, _ := client.DoGet(testEndpoint, contentTypeJson, nil)
 	assert.True(t, resp.IsOk())
 	assert.Equal(t, "{\"foo\":\"bar\"}", resp.ToString())
 
@@ -76,7 +76,7 @@ func TestGoatClientRetries(t *testing.T) {
 		WithHost(server.URL).
 		WithRetry(2, []int{500}).
 		Build()
-	resp, _ := client.DoGet(testEndpoint, nil)
+	resp, _ := client.DoGet(testEndpoint, nil, nil)
 	assert.True(t, resp.IsOk())
 }
 
@@ -101,7 +101,7 @@ func TestGoatClientBasicAuth(t *testing.T) {
 		WithHost(server.URL).
 		WithAuth("user", "pass").
 		Build()
-	resp, _ := client.DoGet(testEndpoint, contentTypeJson)
+	resp, _ := client.DoGet(testEndpoint, contentTypeJson, nil)
 	assert.True(t, resp.IsOk())
 }
 
@@ -123,7 +123,7 @@ func TestGoatClientResponseTimeout(t *testing.T) {
 		WithHost(server.URL).
 		WithResponseTimeout(1).
 		Build()
-	resp, err := client.DoGet(testEndpoint, contentTypeJson)
+	resp, err := client.DoGet(testEndpoint, contentTypeJson, nil)
 	assert.Nil(t, resp)
 	assert.Contains(t, err.Error(), "Client.Timeout exceeded")
 }

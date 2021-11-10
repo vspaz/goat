@@ -70,7 +70,7 @@ func isRetryOnError(statusCode int, errorStatusCodes []int) bool {
 	return false
 }
 
-func (g *GoatClient) DoRequest(method string, path string, headers map[string]string, body interface{}) (*Response, error) {
+func (g *GoatClient) DoRequest(method string, path string, headers, params map[string]string, body interface{}) (*Response, error) {
 	delay := g.builder.delay
 	if headers == nil {
 		headers = map[string]string{}
@@ -79,7 +79,7 @@ func (g *GoatClient) DoRequest(method string, path string, headers map[string]st
 	var err error
 	var resp *Response
 	for attempt := 0; attempt <= g.builder.retryCount; attempt++ {
-		resp, err = g.doRequest(method, path, headers, toByteBuffer(headers, body), nil)
+		resp, err = g.doRequest(method, path, headers, toByteBuffer(headers, body), params)
 		if err == nil && !isRetryOnError(resp.StatusCode, g.builder.retryOnErrors) {
 			return resp, nil
 		}
@@ -90,26 +90,26 @@ func (g *GoatClient) DoRequest(method string, path string, headers map[string]st
 	return nil, err
 }
 
-func (g *GoatClient) DoGet(path string, headers map[string]string) (*Response, error) {
-	return g.DoRequest(http.MethodGet, path, headers, nil)
+func (g *GoatClient) DoGet(path string, headers, params map[string]string) (*Response, error) {
+	return g.DoRequest(http.MethodGet, path, headers, params, nil)
 }
 
-func (g *GoatClient) DoDelete(path string, headers map[string]string, body interface{}) (*Response, error) {
-	return g.DoRequest(http.MethodDelete, path, headers, body)
+func (g *GoatClient) DoDelete(path string, headers, params map[string]string, body interface{}) (*Response, error) {
+	return g.DoRequest(http.MethodDelete, path, headers, params, body)
 }
 
-func (g *GoatClient) DoPatch(path string, headers map[string]string, body interface{}) (*Response, error) {
-	return g.DoRequest(http.MethodPatch, path, headers, body)
+func (g *GoatClient) DoPatch(path string, headers, params map[string]string, body interface{}) (*Response, error) {
+	return g.DoRequest(http.MethodPatch, path, headers, params, body)
 }
 
-func (g *GoatClient) DoPost(path string, headers map[string]string, body interface{}) (*Response, error) {
-	return g.DoRequest(http.MethodPost, path, headers, body)
+func (g *GoatClient) DoPost(path string, headers, params map[string]string, body interface{}) (*Response, error) {
+	return g.DoRequest(http.MethodPost, path, headers, params, body)
 }
 
-func (g *GoatClient) DoPut(path string, headers map[string]string, body interface{}) (*Response, error) {
-	return g.DoRequest(http.MethodPut, path, headers, body)
+func (g *GoatClient) DoPut(path string, headers, params map[string]string, body interface{}) (*Response, error) {
+	return g.DoRequest(http.MethodPut, path, headers, params, body)
 }
 
-func (g *GoatClient) DoHead(path string, headers map[string]string) (*Response, error) {
-	return g.DoRequest(http.MethodHead, path, headers, nil)
+func (g *GoatClient) DoHead(path string, headers, params map[string]string) (*Response, error) {
+	return g.DoRequest(http.MethodHead, path, headers, params, nil)
 }

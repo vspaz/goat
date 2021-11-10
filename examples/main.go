@@ -30,7 +30,7 @@ func main() {
 		WithHeadersReadTimeout(2.0).
 		WithLogLevel("info").
 		Build()
-	resp, err := client.DoGet("/get", nil) // queries https://httpbin.org/get"
+	resp, err := client.DoGet("/get", nil, nil) // queries https://httpbin.org/get"
 	logger := ghttp.ConfigureLogger("info")
 	if err != nil {
 		logger.Fatal(err)
@@ -44,7 +44,7 @@ func main() {
 
 	// or just run as is with default parameters
 	client = ghttp.NewClientBuilder().Build()
-	resp, err = client.DoGet("https://httpbin.org/get", nil)
+	resp, err = client.DoGet("https://httpbin.org/get", nil, nil)
 	if err != nil {
 		logger.Fatal(err)
 	}
