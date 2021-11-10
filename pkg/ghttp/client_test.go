@@ -132,6 +132,8 @@ func startServerToAssertQueryParams(t *testing.T) *httptest.Server {
 	return httptest.NewServer(
 		http.HandlerFunc(
 			func(writer http.ResponseWriter, request *http.Request) {
+				queryValue := request.URL.Query().Get("foo")
+				assert.Equal(t, queryValue, "bar")
 			},
 		),
 	)
