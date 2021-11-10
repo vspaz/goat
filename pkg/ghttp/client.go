@@ -25,13 +25,13 @@ func setRequestQueryParams(req *http.Request, params map[string]string) {
 }
 
 func (g *GoatClient) doRequest(method string, path string, headers map[string]string, body *bytes.Buffer, params map[string]string) (*Response, error) {
-	g.builder.logger.Infof("making request to: '%s'", g.builder.host+path)
 	req, err := http.NewRequest(method, g.builder.host+path, body)
 	if err != nil {
 		g.builder.logger.Fatal(err)
 	}
 	setRequestQueryParams(req, params)
 	req = setHeaders(req, headers)
+	g.builder.logger.Infof("making request to: '%s'", req.URL)
 	resp, err := g.client.Do(req)
 	if err != nil {
 		return nil, err
