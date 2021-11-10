@@ -194,7 +194,24 @@ func TestPatchMethodWithJsonBody(t *testing.T) {
 	client := NewClientBuilder().
 		WithHost(server.URL).
 		Build()
-	resp, _ := client.DoPost(
+	resp, _ := client.DoPatch(
+		testEndpoint,
+		map[string]string{"Content-Type": "application/json"},
+		nil,
+		map[string]string{"foo": "bar"})
+	assert.True(t, resp.IsOk())
+	deserializedBody := make(map[string]string)
+	assert.Nil(t, resp.FromJson(&deserializedBody))
+	assert.Equal(t, map[string]string{"foo": "bar"}, deserializedBody)
+}
+
+func TestPutMethodWithJsonBody(t *testing.T) {
+	server := startServerToAssertJsonBody(t)
+	defer server.Close()
+	client := NewClientBuilder().
+		WithHost(server.URL).
+		Build()
+	resp, _ := client.DoPut(
 		testEndpoint,
 		map[string]string{"Content-Type": "application/json"},
 		nil,
