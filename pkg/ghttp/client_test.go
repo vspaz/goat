@@ -135,10 +135,6 @@ func startServerToAssertQueryParams(t *testing.T) *httptest.Server {
 			func(writer http.ResponseWriter, request *http.Request) {
 				queryValue := request.URL.Query().Get("queryParam")
 				assert.Equal(t, "queryValue", queryValue)
-				body, _ := ioutil.ReadAll(request.Body)
-				var decodedBody map[string]string
-				json.Unmarshal(body, &decodedBody)
-				assert.Equal(t, decodedBody["foo"], "bar")
 			},
 		),
 	)
@@ -150,10 +146,44 @@ func TestQueryParams(t *testing.T) {
 	client := NewClientBuilder().
 		WithHost(server.URL).
 		Build()
+	resp, _ := client.DoGet(
+		testEndpoint,
+		nil,
+		map[string]string{"queryParam": "queryValue"})
+	assert.True(t, resp.IsOk())
+}
+
+func startServerToAssertPostJson(t *testing.T) *httptest.Server {
+	return httptest.NewServer(
+		http.HandlerFunc(
+			func(writer http.ResponseWriter, request *http.Request) {
+				body, _ := ioutil.ReadAll(request.Body)
+				var decodedBody map[string]string
+				json.Unmarshal(body, &decodedBody)
+				assert.Equal(t, decodedBody["foo"], "bar")
+				writer.WriteHeader(http.StatusOK)
+				encodedBody, _ := json.Marshal(decodedBody)
+				if _, err := writer.Write(encodedBody); err != nil {
+					t.Fatal(err)
+				}
+			},
+		),
+	)
+}
+
+func TestPostJsonBody(t *testing.T) {
+	server := startServerToAssertPostJson(t)
+	defer server.Close()
+	client := NewClientBuilder().
+		WithHost(server.URL).
+		Build()
 	resp, _ := client.DoPost(
 		testEndpoint,
 		map[string]string{"Content-Type": "application/json"},
-		map[string]string{"queryParam": "queryValue"},
+		nil,
 		map[string]string{"foo": "bar"})
 	assert.True(t, resp.IsOk())
+	deserializedBody := make(map[string]string)
+	assert.Nil(t, resp.FromJson(&deserializedBody))
+	assert.Equal(t, map[string]string{"foo": "bar"}, deserializedBody)
 }
