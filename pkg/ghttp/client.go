@@ -5,20 +5,34 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"sync"
 	"time"
 )
 
 type GoatClient struct {
 	builder *clientBuilder
 	client  *http.Client
+	mutex   *sync.Mutex
 }
 
-func (g *GoatClient) doRequest(method string, path string, headers map[string]string, body *bytes.Buffer) (*Response, error) {
+func setRequestQueryParams(req *http.Request, params map[string]string) {
+	if params == nil {
+		return
+	}
+	q := req.URL.Query()
+	for key, value := range params {
+		q.Add(key, value)
+	}
+	req.URL.RawQuery = q.Encode()
+}
+
+func (g *GoatClient) doRequest(method string, path string, headers map[string]string, body *bytes.Buffer, params map[string]string) (*Response, error) {
 	g.builder.logger.Infof("making request to: '%s'", g.builder.host+path)
 	req, err := http.NewRequest(method, g.builder.host+path, body)
 	if err != nil {
 		g.builder.logger.Fatal(err)
 	}
+	setRequestQueryParams(req, params)
 	req = setHeaders(req, headers)
 	resp, err := g.client.Do(req)
 	if err != nil {
@@ -65,7 +79,7 @@ func (g *GoatClient) DoRequest(method string, path string, headers map[string]st
 	var err error
 	var resp *Response
 	for attempt := 0; attempt <= g.builder.retryCount; attempt++ {
-		resp, err = g.doRequest(method, path, headers, toByteBuffer(headers, body))
+		resp, err = g.doRequest(method, path, headers, toByteBuffer(headers, body), nil)
 		if err == nil && !isRetryOnError(resp.StatusCode, g.builder.retryOnErrors) {
 			return resp, nil
 		}
