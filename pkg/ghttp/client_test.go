@@ -132,8 +132,8 @@ func startServerToAssertQueryParams(t *testing.T) *httptest.Server {
 	return httptest.NewServer(
 		http.HandlerFunc(
 			func(writer http.ResponseWriter, request *http.Request) {
-				queryValue := request.URL.Query().Get("foo")
-				assert.Equal(t, queryValue, "bar")
+				queryValue := request.URL.Query().Get("queryParam")
+				assert.Equal(t, "queryValue", queryValue)
 			},
 		),
 	)
@@ -145,6 +145,10 @@ func TestQueryParams(t *testing.T) {
 	client := NewClientBuilder().
 		WithHost(server.URL).
 		Build()
-	resp, _ := client.DoGet(testEndpoint, nil, map[string]string{"foo": "bar"})
+	resp, _ := client.DoPost(
+		testEndpoint,
+		map[string]string{"Content-Type": "application/json"},
+		map[string]string{"queryParam": "queryValue"},
+		map[string]string{"foo": "bar"})
 	assert.True(t, resp.IsOk())
 }
