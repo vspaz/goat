@@ -6,7 +6,7 @@ build:
 
 .PHONY: test
 test:
-	go test ./... -v
+	go test -race -v -p 4 ./...
 
 .PHONY: clean
 clean:

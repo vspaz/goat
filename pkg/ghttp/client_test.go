@@ -135,6 +135,7 @@ func startServerToAssertQueryParams(t *testing.T) *httptest.Server {
 			func(writer http.ResponseWriter, request *http.Request) {
 				queryValue := request.URL.Query().Get("queryParam")
 				assert.Equal(t, "queryValue", queryValue)
+				writer.WriteHeader(http.StatusOK)
 			},
 		),
 	)
@@ -159,7 +160,7 @@ func startServerToAssertJsonBody(t *testing.T) *httptest.Server {
 			func(writer http.ResponseWriter, request *http.Request) {
 				body, _ := ioutil.ReadAll(request.Body)
 				var decodedBody map[string]string
-				json.Unmarshal(body, &decodedBody)
+				assert.Nil(t, json.Unmarshal(body, &decodedBody))
 				assert.Equal(t, decodedBody["foo"], "bar")
 				writer.WriteHeader(http.StatusAccepted)
 				encodedBody, _ := json.Marshal(decodedBody)
