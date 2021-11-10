@@ -3,6 +3,7 @@ package ghttp
 import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -134,6 +135,10 @@ func startServerToAssertQueryParams(t *testing.T) *httptest.Server {
 			func(writer http.ResponseWriter, request *http.Request) {
 				queryValue := request.URL.Query().Get("queryParam")
 				assert.Equal(t, "queryValue", queryValue)
+				body, _ := ioutil.ReadAll(request.Body)
+				var decodedBody map[string]string
+				json.Unmarshal(body, &decodedBody)
+				assert.Equal(t, decodedBody["foo"], "bar")
 			},
 		),
 	)
