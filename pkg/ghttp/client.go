@@ -5,14 +5,12 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"sync"
 	"time"
 )
 
 type GoatClient struct {
 	builder *clientBuilder
 	client  *http.Client
-	mutex   *sync.Mutex
 }
 
 func setRequestQueryParams(req *http.Request, params map[string]string) {
@@ -59,7 +57,7 @@ func (g *GoatClient) doRequest(method string, path string, headers map[string]st
 }
 
 func isRetryOnError(statusCode int, errorStatusCodes []int) bool {
-	if errorStatusCodes == nil || len(errorStatusCodes) == 0 {
+	if len(errorStatusCodes) == 0 {
 		return false
 	}
 	for _, errorCode := range errorStatusCodes {
