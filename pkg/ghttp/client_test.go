@@ -161,7 +161,7 @@ func startServerToAssertJsonBody(t *testing.T) *httptest.Server {
 				var decodedBody map[string]string
 				json.Unmarshal(body, &decodedBody)
 				assert.Equal(t, decodedBody["foo"], "bar")
-				writer.WriteHeader(http.StatusOK)
+				writer.WriteHeader(http.StatusAccepted)
 				encodedBody, _ := json.Marshal(decodedBody)
 				if _, err := writer.Write(encodedBody); err != nil {
 					t.Fatal(err)
@@ -182,7 +182,7 @@ func TestPostMethodWithJsonBody(t *testing.T) {
 		map[string]string{"Content-Type": "application/json"},
 		nil,
 		map[string]string{"foo": "bar"})
-	assert.True(t, resp.IsOk())
+	assert.True(t, resp.IsAccepted())
 	deserializedBody := make(map[string]string)
 	assert.Nil(t, resp.FromJson(&deserializedBody))
 	assert.Equal(t, map[string]string{"foo": "bar"}, deserializedBody)
@@ -199,7 +199,7 @@ func TestPatchMethodWithJsonBody(t *testing.T) {
 		map[string]string{"Content-Type": "application/json"},
 		nil,
 		map[string]string{"foo": "bar"})
-	assert.True(t, resp.IsOk())
+	assert.True(t, resp.IsAccepted())
 	deserializedBody := make(map[string]string)
 	assert.Nil(t, resp.FromJson(&deserializedBody))
 	assert.Equal(t, map[string]string{"foo": "bar"}, deserializedBody)
@@ -216,7 +216,7 @@ func TestPutMethodWithJsonBody(t *testing.T) {
 		map[string]string{"Content-Type": "application/json"},
 		nil,
 		map[string]string{"foo": "bar"})
-	assert.True(t, resp.IsOk())
+	assert.True(t, resp.IsAccepted())
 	deserializedBody := make(map[string]string)
 	assert.Nil(t, resp.FromJson(&deserializedBody))
 	assert.Equal(t, map[string]string{"foo": "bar"}, deserializedBody)
