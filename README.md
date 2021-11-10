@@ -53,7 +53,7 @@ func main() {
 		WithLogLevel("info"). // optional 
 		Build()
 
-	resp, err := client.DoGet("/get", nil)
+	resp, err := client.DoGet("/get", nil, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -65,7 +65,7 @@ func main() {
 
 	// or just run with default parameters
 	client = ghttp.NewClientBuilder().Build()
-	resp, err = client.DoGet("https://httpbin.org", nil)
+	resp, err = client.DoGet("https://httpbin.org", nil, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
