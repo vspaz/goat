@@ -12,14 +12,13 @@ import (
 
 const (
 	userAgent    = "goat"
-	contentType  = "application/json"
 	testEndpoint = "/test-endpoint"
 )
 
 func assertRequest(t *testing.T, request *http.Request) {
 	assert.Equal(t, request.URL.String(), testEndpoint)
 	assert.Equal(t, request.Header["User-Agent"][0], userAgent)
-	assert.Equal(t, request.Header["Content-Type"][0], contentType)
+	assert.Equal(t, request.Header["Content-Type"][0], "application/json")
 }
 
 func startServer(t *testing.T) *httptest.Server {
@@ -44,7 +43,7 @@ func TestHttpClientDoGetHeaders(t *testing.T) {
 		WithHost(server.URL).
 		WithUserAgent(userAgent).
 		Build()
-	resp, _ := client.DoGet(testEndpoint, contentTypeJson, nil)
+	resp, _ := client.DoGet(testEndpoint, map[string]string{"Content-Type": "application/json"}, nil)
 	assert.True(t, resp.IsOk())
 	assert.Equal(t, "{\"foo\":\"bar\"}", resp.ToString())
 
@@ -71,6 +70,7 @@ func startServerWithRetries(t *testing.T) *httptest.Server {
 }
 
 func TestGoatClientRetries(t *testing.T) {
+	t.Parallel()
 	server := startServerWithRetries(t)
 	defer server.Close()
 	client := NewClientBuilder().
@@ -96,13 +96,14 @@ func startBasicAuthServer(t *testing.T) *httptest.Server {
 }
 
 func TestGoatClientBasicAuth(t *testing.T) {
+	t.Parallel()
 	server := startBasicAuthServer(t)
 	defer server.Close()
 	client := NewClientBuilder().
 		WithHost(server.URL).
 		WithAuth("user", "pass").
 		Build()
-	resp, _ := client.DoGet(testEndpoint, contentTypeJson, nil)
+	resp, _ := client.DoGet(testEndpoint, map[string]string{"Content-Type": "application/json"}, nil)
 	assert.True(t, resp.IsOk())
 }
 
@@ -118,13 +119,14 @@ func startServerWithTimeouts() *httptest.Server {
 }
 
 func TestGoatClientResponseTimeout(t *testing.T) {
+	t.Parallel()
 	server := startServerWithTimeouts()
 	defer server.Close()
 	client := NewClientBuilder().
 		WithHost(server.URL).
 		WithResponseTimeout(1).
 		Build()
-	resp, err := client.DoGet(testEndpoint, contentTypeJson, nil)
+	resp, err := client.DoGet(testEndpoint, map[string]string{"Content-Type": "application/json"}, nil)
 	assert.Nil(t, resp)
 	assert.Contains(t, err.Error(), "Client.Timeout exceeded")
 }
@@ -142,6 +144,7 @@ func startServerToAssertQueryParams(t *testing.T) *httptest.Server {
 }
 
 func TestQueryParams(t *testing.T) {
+	t.Parallel()
 	server := startServerToAssertQueryParams(t)
 	defer server.Close()
 	client := NewClientBuilder().
@@ -173,6 +176,7 @@ func startServerToAssertJsonBody(t *testing.T) *httptest.Server {
 }
 
 func TestPostMethodWithJsonBody(t *testing.T) {
+	t.Parallel()
 	server := startServerToAssertJsonBody(t)
 	defer server.Close()
 	client := NewClientBuilder().
@@ -190,6 +194,7 @@ func TestPostMethodWithJsonBody(t *testing.T) {
 }
 
 func TestPatchMethodWithJsonBody(t *testing.T) {
+	t.Parallel()
 	server := startServerToAssertJsonBody(t)
 	defer server.Close()
 	client := NewClientBuilder().
@@ -207,6 +212,7 @@ func TestPatchMethodWithJsonBody(t *testing.T) {
 }
 
 func TestPutMethodWithJsonBody(t *testing.T) {
+	t.Parallel()
 	server := startServerToAssertJsonBody(t)
 	defer server.Close()
 	client := NewClientBuilder().
