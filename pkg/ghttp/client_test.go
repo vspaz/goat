@@ -153,7 +153,7 @@ func TestQueryParams(t *testing.T) {
 	assert.True(t, resp.IsOk())
 }
 
-func startServerToAssertPostJson(t *testing.T) *httptest.Server {
+func startServerToAssertJsonBody(t *testing.T) *httptest.Server {
 	return httptest.NewServer(
 		http.HandlerFunc(
 			func(writer http.ResponseWriter, request *http.Request) {
@@ -171,8 +171,25 @@ func startServerToAssertPostJson(t *testing.T) *httptest.Server {
 	)
 }
 
-func TestPostJsonBody(t *testing.T) {
-	server := startServerToAssertPostJson(t)
+func TestPostMethodWithJsonBody(t *testing.T) {
+	server := startServerToAssertJsonBody(t)
+	defer server.Close()
+	client := NewClientBuilder().
+		WithHost(server.URL).
+		Build()
+	resp, _ := client.DoPost(
+		testEndpoint,
+		map[string]string{"Content-Type": "application/json"},
+		nil,
+		map[string]string{"foo": "bar"})
+	assert.True(t, resp.IsOk())
+	deserializedBody := make(map[string]string)
+	assert.Nil(t, resp.FromJson(&deserializedBody))
+	assert.Equal(t, map[string]string{"foo": "bar"}, deserializedBody)
+}
+
+func TestPatchMethodWithJsonBody(t *testing.T) {
+	server := startServerToAssertJsonBody(t)
 	defer server.Close()
 	client := NewClientBuilder().
 		WithHost(server.URL).
