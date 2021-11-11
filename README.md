@@ -73,3 +73,27 @@ func main() {
 	log.Println(resp.ToString())
 }
 ```
+
+```go
+
+package main
+
+import (
+	"github.com/vspaz/goat/pkg/ghttp"
+	"log"
+)
+
+func main() {
+	client := ghttp.NewClientBuilder().Build()
+	resp, err := client.DoPost(
+		"https://httpbin.org/post",
+		map[string]string{"Content-Type": "application/json"},
+		map[string]string{"param": "value"},
+		map[string]string{"foo": "bar"})
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(resp.IsOk())
+	log.Println(resp.ToString())
+}
+```
