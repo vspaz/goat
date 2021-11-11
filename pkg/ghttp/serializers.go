@@ -7,7 +7,7 @@ import (
 )
 
 func toByteBuffer(headers map[string]string, body interface{}) *bytes.Buffer {
-	if isJson(headers) {
+	if isJson(headers) || isXml(headers){
 		return bytes.NewBuffer(ToJson(body))
 	}
 
