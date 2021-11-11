@@ -3,6 +3,7 @@ package ghttp
 import (
 	"bytes"
 	"encoding/json"
+	"encoding/xml"
 )
 
 func toByteBuffer(headers map[string]string, body interface{}) *bytes.Buffer {
@@ -19,5 +20,10 @@ func FromJson(deserializable []byte, deserialized interface{}) error {
 
 func ToJson(serializable interface{}) []byte {
 	encodedMessage, _ := json.Marshal(serializable)
+	return encodedMessage
+}
+
+func ToXml(serializable interface{}) []byte {
+	encodedMessage, _ := xml.Marshal(serializable)
 	return encodedMessage
 }
