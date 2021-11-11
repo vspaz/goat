@@ -16,6 +16,49 @@ it supports out of the box:
 still, if you don't wish any configuration, you can you use it as is with default parameters. Please, see the examples
 below:
 
+### Building a client
+
+```go
+package main
+
+import (
+	"github.com/vspaz/goat/pkg/ghttp"
+	"log"
+)
+
+func main() {
+	client := ghttp.NewClientBuilder().
+		WithHost("https://httpbin.org"). // optional 
+		WithAuth("user", "user-password"). // optional 
+		WithTls("cert.pem", "cert.pem", "ca.crt"). // optional 
+		WithTlsHandshakeTimeout(10.0). // optional
+		WithUserAgent("goat"). // optional
+		WithRetry(3, []int{500, 503}). // optional 
+		WithDelay(0.5). // optional
+		WithResponseTimeout(10.0). // optional
+		WithConnectionTimeout(2.0). // optional 
+		WithHeadersReadTimeout(2.0). // optional
+		WithLogLevel("info"). // optional 
+		Build()
+
+	resp, err := client.DoGet("/get", nil, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(resp.IsOk())
+
+	// or just
+	client = ghttp.NewClientBuilder().Build()
+	resp, err = client.DoGet("https://httpbin.org", nil, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println(resp.IsOk())
+}
+```
+
+### /GET
+
 ```go
 package main
 
@@ -39,33 +82,8 @@ type HttpBinGetResponse struct {
 }
 
 func main() {
-	client := ghttp.NewClientBuilder().
-		WithHost("https://httpbin.org"). // optional 
-		WithAuth("user", "user-password"). // optional 
-		WithTls("cert.pem", "cert.pem", "ca.crt"). // optional 
-		WithTlsHandshakeTimeout(10.0). // optional
-		WithUserAgent("goat"). // optional
-		WithRetry(3, []int{500, 503}). // optional 
-		WithDelay(0.5). // optional
-		WithResponseTimeout(10.0). // optional
-		WithConnectionTimeout(2.0). // optional 
-		WithHeadersReadTimeout(2.0). // optional
-		WithLogLevel("info"). // optional 
-		Build()
-
-	resp, err := client.DoGet("/get", nil, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println(resp.StatusCode)
-	log.Println(resp.ToString())
-
-	deserializedBody := HttpBinGetResponse{}
-	resp.FromJson(&deserializedBody)
-
-	// or just run with default parameters
-	client = ghttp.NewClientBuilder().Build()
-	resp, err = client.DoGet("https://httpbin.org", nil, nil)
+	client := ghttp.NewClientBuilder().Build()
+	resp, err := client.DoGet("https://httpbin.org", nil, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -73,6 +91,8 @@ func main() {
 	log.Println(resp.ToString())
 }
 ```
+
+### /POST
 
 ```go
 
