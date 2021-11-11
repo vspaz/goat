@@ -13,3 +13,8 @@ func isJson(headers map[string]string) bool {
 	contentType, hasKey := headers["Content-Type"]
 	return hasKey && contentType == "application/json"
 }
+
+func isXml(headers map[string]string) bool {
+	contentType, hasKey := headers["Content-Type"]
+	return hasKey && contentType == "application/xml"
+}
