@@ -49,7 +49,7 @@ func main() {
 
 	// or just
 	client = ghttp.NewClientBuilder().Build()
-	resp, err = client.DoGet("https://httpbin.org", nil, nil)
+	resp, err = client.DoGet("https://httpbin.org/get", nil, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -83,7 +83,7 @@ type HttpBinGetResponse struct {
 
 func main() {
 	client := ghttp.NewClientBuilder().Build()
-	resp, err := client.DoGet("https://httpbin.org", nil, nil)
+	resp, err := client.DoGet("https://httpbin.org/get", nil, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
