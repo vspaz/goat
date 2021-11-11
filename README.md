@@ -16,6 +16,12 @@ it supports out of the box:
 still, if you don't wish any configuration, you can you use it as is with default parameters. Please, see the examples
 below:
 
+### Local installation
+
+```shell
+go get -u github.com/vspaz/goat/pkg/ghttp@v1.1.1
+```
+
 ### Building a client
 
 ```go
