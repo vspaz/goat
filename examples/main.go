@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/vspaz/goat/pkg/ghttp"
+	"github.com/vspaz/simplelogger/pkg/logging"
 )
 
 type HttpBinGetResponse struct {
@@ -31,7 +32,7 @@ func main() {
 		WithLogLevel("info").
 		Build()
 	resp, err := client.DoGet("/get", nil, nil) // queries https://httpbin.org/get"
-	logger := ghttp.ConfigureLogger("info")
+	logger := logging.GetTextLogger("info").Logger
 	if err != nil {
 		logger.Fatal(err)
 	}
