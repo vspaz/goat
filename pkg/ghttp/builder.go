@@ -2,6 +2,7 @@ package ghttp
 
 import (
 	"github.com/sirupsen/logrus"
+	"glop/pkg/logging"
 	"net"
 	"net/http"
 	"time"
@@ -92,13 +93,13 @@ func (b *clientBuilder) WithTlsHandshakeTimeout(timeout float64) *clientBuilder 
 }
 
 func (b *clientBuilder) WithLogLevel(logLevel string) *clientBuilder {
-	b.logger = ConfigureLogger(logLevel)
+	b.logger = logging.GetTextLogger(logLevel).Logger
 	return b
 }
 
 func setDefaults(b *clientBuilder) *clientBuilder {
 	if b.logger == nil {
-		b.logger = ConfigureLogger("info")
+		b.logger = logging.GetTextLogger("info").Logger
 	}
 
 	if b.responseTimeout == 0 {
