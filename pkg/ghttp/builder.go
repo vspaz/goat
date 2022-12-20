@@ -2,7 +2,7 @@ package ghttp
 
 import (
 	"github.com/sirupsen/logrus"
-	"glop/pkg/logging"
+	"github.com/vspaz/simplelogger/pkg/logging"
 	"net"
 	"net/http"
 	"time"
