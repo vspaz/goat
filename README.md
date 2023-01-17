@@ -19,7 +19,7 @@ below:
 ### Local installation
 
 ```shell
-go get -u github.com/vspaz/goat/pkg/ghttp@v1.1.1
+go get -u github.com/vspaz/goat/pkg/ghttp@v1.2.1
 ```
 
 ### Building a client
