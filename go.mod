@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/stretchr/testify v1.8.1
-	github.com/vspaz/simplelogger v0.0.1
+	github.com/vspaz/simplelogger v0.1.0
 )
 
 require (
