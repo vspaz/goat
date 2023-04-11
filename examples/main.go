@@ -40,7 +40,10 @@ func main() {
 	logger.Info(resp.ToString())
 
 	decodedBody := HttpBinGetResponse{}
-	resp.FromJson(&decodedBody)
+	if err = resp.FromJson(&decodedBody); err != nil {
+		logger.Errorf("failed to parse json %s", err)
+		logger.Exit(-1)
+	}
 	logger.Info(decodedBody.Headers.UserAgent)
 
 	// or just run as is with default parameters
