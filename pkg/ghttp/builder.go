@@ -16,7 +16,7 @@ type clientBuilder struct {
 	tlsKeyFilePath        string
 	tlsCaFilePath         string
 	userAgent             string
-	retryCount            uint
+	retryCount            uint8
 	retryOnErrors         []int
 	delay                 time.Duration
 	responseTimeout       time.Duration
@@ -51,7 +51,7 @@ func (b *clientBuilder) WithUserAgent(userAgent string) *clientBuilder {
 	return b
 }
 
-func (b *clientBuilder) WithRetry(count uint, onErrors []int) *clientBuilder {
+func (b *clientBuilder) WithRetry(count uint8, onErrors []int) *clientBuilder {
 	b.retryCount = count
 	b.retryOnErrors = onErrors
 	return b
@@ -130,7 +130,7 @@ func setDefaults(b *clientBuilder) *clientBuilder {
 		b.delay = time.Duration(1)
 	}
 
-	b.retryCount++ // run at least once
+	b.retryCount++
 
 	return b
 }

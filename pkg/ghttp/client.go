@@ -3,7 +3,6 @@ package ghttp
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -42,7 +41,7 @@ func (g *GoatClient) doRequest(method string, path string, headers map[string]st
 			g.builder.logger.Fatalf("failed to close body %s", err)
 		}
 	}(resp.Body)
-	respBody, err := ioutil.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		g.builder.logger.Error(err)
 		return nil, err

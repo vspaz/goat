@@ -3,7 +3,7 @@ package ghttp
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"io/ioutil"
+	"os"
 )
 
 func loadKeyPair(certFilePath string, keyFilePath string) tls.Certificate {
@@ -21,7 +21,7 @@ func loadCa(caFilePath string) *x509.CertPool {
 	if caFilePath == "" {
 		return nil
 	}
-	ca, err := ioutil.ReadFile(caFilePath)
+	ca, err := os.ReadFile(caFilePath)
 	if err != nil {
 		panic(err)
 	}

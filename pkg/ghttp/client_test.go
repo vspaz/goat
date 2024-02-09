@@ -3,7 +3,7 @@ package ghttp
 import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -161,7 +161,7 @@ func startServerToAssertJsonBody(t *testing.T) *httptest.Server {
 	return httptest.NewServer(
 		http.HandlerFunc(
 			func(writer http.ResponseWriter, request *http.Request) {
-				body, _ := ioutil.ReadAll(request.Body)
+				body, _ := io.ReadAll(request.Body)
 				var decodedBody map[string]string
 				assert.Nil(t, json.Unmarshal(body, &decodedBody))
 				assert.Equal(t, decodedBody["foo"], "bar")
