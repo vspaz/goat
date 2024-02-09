@@ -52,7 +52,7 @@ func (b *clientBuilder) WithUserAgent(userAgent string) *clientBuilder {
 }
 
 func (b *clientBuilder) WithRetry(count int, onErrors []int) *clientBuilder {
-	b.retryCount = count
+	b.retryCount = count + 1
 	b.retryOnErrors = onErrors
 	return b
 }

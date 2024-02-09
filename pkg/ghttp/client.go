@@ -76,7 +76,7 @@ func (g *GoatClient) DoRequest(method string, path string, headers, params map[s
 	headers["User-Agent"] = g.builder.userAgent
 	var err error
 	var resp *Response
-	for attempt := 0; attempt <= g.builder.retryCount; attempt++ {
+	for attempt := range g.builder.retryCount {
 		resp, err = g.doRequest(method, path, headers, toByteBuffer(headers, body), params)
 		if err == nil && !isRetryOnError(resp.StatusCode, g.builder.retryOnErrors) {
 			return resp, nil
