@@ -129,6 +129,9 @@ func setDefaults(b *clientBuilder) *clientBuilder {
 	if b.delay == 0 {
 		b.delay = time.Duration(1)
 	}
+
+	b.retryCount++ // run at least once
+
 	return b
 }
 
